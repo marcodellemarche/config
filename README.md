@@ -1,2 +1,8 @@
-# config
-Nix Home Manager configuration for my personal computer
+# Config - a Nix Home Manager configuration
+
+How to install packages:
+
+```sh
+nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER
+```
+
