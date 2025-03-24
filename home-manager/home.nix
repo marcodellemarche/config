@@ -10,37 +10,46 @@
   home.username = "marcodellemarche";
   home.homeDirectory = "/home/marcodellemarche";
   home.stateVersion = "23.05";
-  home.packages = with pkgs; [
-    neofetch
-    slack
-    brave
-    vscode
-    dbeaver-bin
-    vim
-    curl
-    bazel_7
-    direnv
-    go
-    go-task
-    kind
-    ctlptl
-    tilt
-    kubectl
-    kubernetes-helm
-    k9s
-    obsidian
-    awscli2
-    zsh
-    fzf
-    gimp
-    postgresql_15
-    google-cloud-sdk
-    gh
-    jq
-    yq
-    pwgen
+  home.packages = [
+    pkgs.neofetch
+    pkgs.slack
+    pkgs.brave
+    pkgs.vscode
+    pkgs.dbeaver-bin
+    pkgs.vim
+    pkgs.curl
+    pkgs.bazelisk
+    pkgs.direnv
+    pkgs.go
+    pkgs.go-task
+    pkgs.kind
+    pkgs.ctlptl
+    pkgs.tilt
+    pkgs.kubectl
+    pkgs.kubernetes-helm
+    pkgs.k9s
+    pkgs.obsidian
+    pkgs.awscli2
+    pkgs.zsh
+    pkgs.fzf
+    pkgs.gimp
+    pkgs.postgresql_15
+    pkgs.google-cloud-sdk
+    pkgs.gh
+    pkgs.jq
+    pkgs.yq
+    pkgs.pwgen
+    pkgs.redis
+    pkgs.python311
+    pkgs.vlc
+    pkgs.nodejs
   ];
-  programs.home-manager.enable = true;
+  
+  # These cursor things maybe are not needed
+  home.pointerCursor.gtk.enable = true;
+  home.pointerCursor.package = pkgs.vanilla-dmz;
+  home.pointerCursor.name = "Vanilla-DMZ";
+  
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -49,7 +58,8 @@
 
     shellAliases = {
       ll = "ls -l";
-      # update = "sudo nixos-rebuild switch";
+      home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER";
+      bazel-reload = "cd ~/.nix-profile/bin; sudo ln -s bazelisk bazel; sudo chown -h $USER:$USER bazel";
     };
 
     oh-my-zsh = {
@@ -79,33 +89,13 @@
     #   signByDefault = true;
     # };
     aliases = {
-      # a = "add";
-      # c = "commit";
-      # ca = "commit --amend";
       cane = "commit --amend --no-edit";
-      # cl = "clone";
-      # cm = "commit -m";
-      # co = "checkout";
-      # cp = "cherry-pick";
-      # cpx = "cherry-pick -x";
-      # d = "diff";
-      # f = "fetch";
-      # fo = "fetch origin";
-      # fu = "fetch upstream";
-      # lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
-      # lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-      # pl = "pull";
-      # pr = "pull -r";
-      # ps = "push";
-      # psf = "push -f";
-      # rb = "rebase";
-      # rbi = "rebase -i";
-      # r = "remote";
-      # ra = "remote add";
-      # rr = "remote rm";
-      # rv = "remote -v";
-      # rs = "remote show";
-      # st = "status";
+      fap = "fetch -ap";
+      lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
+      lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
+      rod = "rebase origin/develop";
+      puf = "push --force";
+      pr = "pull --rebase";
     };
     extraConfig = {
       merge = {
