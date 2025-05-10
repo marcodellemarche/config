@@ -19,6 +19,7 @@
     pkgs.vim
     pkgs.curl
     pkgs.bazelisk
+    pkgs.bazel-buildtools
     pkgs.direnv
     pkgs.go
     pkgs.go-task
@@ -43,6 +44,10 @@
     pkgs.python311
     pkgs.vlc
     pkgs.nodejs
+    pkgs.gnumake
+    pkgs.coder
+    pkgs.go-swag
+    pkgs.python311Packages.matplotlib
   ];
   
   # These cursor things maybe are not needed
