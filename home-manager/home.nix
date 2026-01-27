@@ -138,6 +138,9 @@
   # users.users.marcodellemarche.shell = pkgs.zsh;
   # home.sessionVariables.SHELL = pkgs.zsh;
 
+  # Add ~/.opencode/bin to PATH
+  home.sessionPath = [ "/home/marcodellemarche/.opencode/bin" ];
+
   # programs.gnome-terminal.profile.marcodellemarche.customCommand = "zsh";
 
   # home.shell = pkgs.zsh;
