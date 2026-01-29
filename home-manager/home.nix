@@ -54,7 +54,7 @@
   home.pointerCursor.gtk.enable = true;
   home.pointerCursor.package = pkgs.vanilla-dmz;
   home.pointerCursor.name = "Vanilla-DMZ";
-  
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -65,6 +65,10 @@
       ll = "ls -l";
       home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER";
       bazel-reload = "cd ~/.nix-profile/bin; sudo ln -s bazelisk bazel; sudo chown -h $USER:$USER bazel";
+      slack = "slack --no-sandbox";
+      brave = "brave --no-sandbox";
+      code = "code --no-sandbox";
+      obsidian = "obsidian --no-sandbox";
     };
 
     oh-my-zsh = {
@@ -84,31 +88,86 @@
     # enableCompletion = true;
   };
 
+  xdg.desktopEntries.brave = {
+    name = "Brave Web Browser";
+    genericName = "Web Browser";
+    exec = "brave --no-sandbox";
+    terminal = false;
+    categories = [ "Network" "WebBrowser" ];
+    mimeType = [ "text/html" "text/xml" ];
+    icon = pkgs.fetchurl {
+      url = "https://brave.com/static-assets/images/brave-logo-sans-text.svg";
+      sha256 = "JTD4D98hRLYvlpU6gcaYjJwxpsx8necuBpB5SFgXy+c=";
+    };
+  };
+
+  xdg.desktopEntries.slack = {
+    name = "Slack";
+    genericName = "Chat";
+    exec = "slack --no-sandbox";
+    terminal = false;
+    categories = [ "Office" ];
+    mimeType = [ ];
+    icon = pkgs.fetchurl {
+      url = "https://a.slack-edge.com/38f0e7c/marketing/img/nav/logo.svg";
+      sha256 = "OmfD3MKhZV2fPqEFGBfEyISdgCOD5F3WzsG5EP+HSSI=";
+    };
+  };
+
+  xdg.desktopEntries.code = {
+    name = "Visual Studio Code";
+    genericName = "Code Editor";
+    exec = "code --no-sandbox";
+    terminal = false;
+    categories = [ "Development" ];
+    mimeType = [ "text/html" "text/xml" ];
+    icon = pkgs.fetchurl {
+      url = "https://code.visualstudio.com/assets/branding/code-stable.png";
+      sha256 = "esKeAM1m5UmswupqmagT+SyyOm0WUpO+aVmEVnDwxaQ=";
+    };
+  };
+  
+  xdg.desktopEntries.obsidian = {
+    name = "Obsidian";
+    genericName = "Text Editor";
+    exec = "obsidian --no-sandbox";
+    terminal = false;
+    categories = [ "Utility" ];
+    mimeType = [ "text/html" "text/xml" ];
+    icon = pkgs.fetchurl {
+      url = "https://obsidian.md/images/obsidian-logo-gradient.svg";
+      sha256 = "EZsBuWyZ9zYJh0LDKfRAMTtnY70q6iLK/ggXlplDEoA=";
+    };
+  };
+
   programs.git = {
     enable = true;
     lfs.enable = true;
-    userName = "Marco Ferretti";
-    userEmail = "mferretti93@gmail.com";
     # signing = {
     #   key = "5C841D3CFDFEC4E0";
     #   signByDefault = true;
     # };
-    aliases = {
-      cane = "commit --amend --no-edit";
-      fap = "fetch -ap";
-      lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
-      lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-      rod = "rebase origin/develop";
-      puf = "push --force";
-      pr = "pull --rebase";
-    };
-    extraConfig = {
+  
+    settings = {
+      user = {
+        name = "Marco Ferretti";
+        email = "mferretti93@gmail.com";
+      };
       merge = {
         tool = "vimdiff";
         conflictstyle = "diff3";
       };
       pull = {
         rebase=true;
+      };
+      alias = {
+        cane = "commit --amend --no-edit";
+        fap = "fetch -ap";
+        lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
+        lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
+        rod = "rebase origin/develop";
+        puf = "push --force";
+        pr = "pull --rebase";
       };
       mergetool.prompt = "false";
       core.editor = "vim";
