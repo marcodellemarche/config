@@ -1,4 +1,4 @@
-{ config, lib, pkgs, users, ... }:
+{ config, lib, pkgs, pkgs-go, users, ... }:
 
 {
   nixpkgs = {
@@ -21,7 +21,7 @@
     pkgs.bazelisk
     pkgs.bazel-buildtools
     pkgs.direnv
-    pkgs.go
+    pkgs-go.go_1_24
     pkgs.go-task
     pkgs.kind
     pkgs.ctlptl
@@ -41,13 +41,15 @@
     pkgs.yq
     pkgs.pwgen
     pkgs.redis
-    pkgs.python311
+    (pkgs.python311.withPackages (ps: with ps; [
+      pip
+      matplotlib
+    ]))
     pkgs.vlc
     pkgs.nodejs
     pkgs.gnumake
     pkgs.coder
     pkgs.go-swag
-    pkgs.python311Packages.matplotlib
   ];
   
   # These cursor things maybe are not needed
