@@ -33,14 +33,6 @@ chsh -s $(which zsh)
 
 Restart the terminal. From here on, use `home-reload` for subsequent updates.
 
-### 5. Configure the shell prompt (once)
-
-```sh
-p10k configure
-```
-
-This generates `~/.p10k.zsh`, which is sourced automatically on every shell start.
-
 ---
 
 ## Updating
@@ -69,7 +61,13 @@ nix/
 ├── flake.nix               # Entry point: inputs and outputs
 ├── flake.lock              # Lock file (pinned versions)
 └── home-manager/
-    ├── home.nix            # Main configuration
+    ├── home.nix            # Identity, fonts, cursor, desktop entries
+    ├── config/
+    │   └── p10k.zsh        # Powerlevel10k prompt config
     └── apps/
-        └── tmux.nix        # Tmux configuration
+        ├── zsh.nix         # Zsh, p10k, fzf, eza, zoxide, aliases
+        ├── git.nix         # Git settings, LFS, aliases
+        ├── dev.nix         # Dev packages, bazel wrapper
+        ├── tmux.nix        # Tmux with resurrect/continuum
+        └── ssh.nix         # SSH config (placeholder)
 ```
