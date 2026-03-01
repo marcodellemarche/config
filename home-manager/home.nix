@@ -71,8 +71,7 @@
     syntaxHighlighting.enable = true;
 
     shellAliases = {
-      ll = "ls -l";
-      home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER";
+      home-reload = "home-manager switch --flake ~/nix/#$USER";
       bazel-reload = "cd ~/.nix-profile/bin; sudo ln -s bazelisk bazel; sudo chown -h $USER:$USER bazel";
       slack = "slack --no-sandbox";
       brave = "brave --no-sandbox";
@@ -86,8 +85,12 @@
         "git"
         "fzf"
       ];
-      theme = "robbyrussell";
     };
+
+    initContent = ''
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+      [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+    '';
   };
 
   programs.fzf = {
@@ -104,10 +107,7 @@
     terminal = false;
     categories = [ "Network" "WebBrowser" ];
     mimeType = [ "text/html" "text/xml" ];
-    icon = pkgs.fetchurl {
-      url = "https://brave.com/static-assets/images/brave-logo-sans-text.svg";
-      sha256 = "JTD4D98hRLYvlpU6gcaYjJwxpsx8necuBpB5SFgXy+c=";
-    };
+    icon = "brave-browser";
   };
 
   xdg.desktopEntries.slack = {
@@ -117,10 +117,7 @@
     terminal = false;
     categories = [ "Office" ];
     mimeType = [ ];
-    icon = pkgs.fetchurl {
-      url = "https://a.slack-edge.com/38f0e7c/marketing/img/nav/logo.svg";
-      sha256 = "OmfD3MKhZV2fPqEFGBfEyISdgCOD5F3WzsG5EP+HSSI=";
-    };
+    icon = "slack";
   };
 
   xdg.desktopEntries.code = {
@@ -130,10 +127,7 @@
     terminal = false;
     categories = [ "Development" ];
     mimeType = [ "text/html" "text/xml" ];
-    icon = pkgs.fetchurl {
-      url = "https://code.visualstudio.com/assets/branding/code-stable.png";
-      sha256 = "esKeAM1m5UmswupqmagT+SyyOm0WUpO+aVmEVnDwxaQ=";
-    };
+    icon = "code";
   };
   
   xdg.desktopEntries.obsidian = {
@@ -143,20 +137,20 @@
     terminal = false;
     categories = [ "Utility" ];
     mimeType = [ "text/html" "text/xml" ];
-    icon = pkgs.fetchurl {
-      url = "https://obsidian.md/images/obsidian-logo-gradient.svg";
-      sha256 = "EZsBuWyZ9zYJh0LDKfRAMTtnY70q6iLK/ggXlplDEoA=";
-    };
+    icon = "obsidian";
   };
 
   programs.git = {
     enable = true;
     lfs.enable = true;
+    # To enable commit signing, get your key ID with:
+    #   gpg --list-secret-keys --keyid-format LONG
+    # Then uncomment:
     # signing = {
-    #   key = "5C841D3CFDFEC4E0";
+    #   key = "YOUR_KEY_ID";
     #   signByDefault = true;
     # };
-  
+
     settings = {
       user = {
         name = "Marco Ferretti";
@@ -181,24 +175,11 @@
       mergetool.prompt = "false";
       core.editor = "vim";
     };
+    # Per-directory overrides (e.g. different email for work repos):
     # includes = [
-    #   # use different signing key
     #   {
     #     condition = "gitdir:~/work/";
-    #     contents = {
-    #       user = {
-    #         name = "Jonathan Ringer";
-    #         email = "jonathan.ringer@iohk.io";
-    #         signingKey = "523B37EC8FB6E3A2";
-    #       };
-    #     };
-    #   }
-    #   # prevent background gc thread from constantly blocking reviews
-    #   {
-    #     condition = "gitdir:~/projects/nixpkgs";
-    #     contents = {
-    #       gc.auto = 0;
-    #     };
+    #     contents.user.email = "marco@work.com";
     #   }
     # ];
   };

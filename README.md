@@ -1,67 +1,75 @@
 # Nix Home Manager
 
-Configurazione dichiarativa dell'ambiente di sviluppo tramite [Home Manager](https://github.com/nix-community/home-manager).
+Declarative development environment managed by [Home Manager](https://github.com/nix-community/home-manager).
 
-## Setup su una nuova macchina
+## Setup on a new machine
 
-### 1. Installa Nix
+### 1. Install Nix
 
 ```sh
 curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
 ```
 
-Riavvia il terminale (o esegui `source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh`).
+Restart the terminal (or run `source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh`).
 
-### 2. Clona questa repo
+### 2. Clone this repo
 
 ```sh
 git clone https://github.com/marcodellemarche/nix ~/nix
 ```
 
-### 3. Applica la configurazione
+### 3. Apply the configuration (first time)
 
 ```sh
 nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER
 ```
 
-### 4. Imposta zsh come shell di default
+### 4. Set zsh as the default shell
 
 ```sh
 echo $(which zsh) | sudo tee -a /etc/shells
 chsh -s $(which zsh)
 ```
 
-Riavvia il terminale.
+Restart the terminal. From here on, use `home-reload` for subsequent updates.
+
+### 5. Configure the shell prompt (once)
+
+```sh
+p10k configure
+```
+
+This generates `~/.p10k.zsh`, which is sourced automatically on every shell start.
 
 ---
 
-## Aggiornare
+## Updating
 
 ```sh
-# Aggiorna i flake inputs all'ultima versione disponibile
+# Update all flake inputs to latest
 nix flake update ~/nix
 
-# Riapplica la configurazione
+# Re-apply configuration
 home-reload
 ```
 
-## Comandi utili
+## Useful commands
 
-| Comando | Descrizione |
+| Command | Description |
 |---------|-------------|
-| `home-reload` | Riapplica la configurazione home-manager |
-| `nix flake update ~/nix` | Aggiorna tutti i pacchetti |
-| `home-manager generations` | Mostra le generazioni precedenti |
-| `home-manager rollback` | Torna alla generazione precedente |
+| `home-reload` | Re-apply the home-manager configuration |
+| `nix flake update ~/nix` | Update all packages to latest versions |
+| `home-manager generations` | List previous generations |
+| `home-manager rollback` | Revert to the previous generation |
 
-## Struttura
+## Structure
 
 ```
 nix/
-├── flake.nix               # Entry point: inputs e outputs
-├── flake.lock              # Lock file (versioni pinned)
+├── flake.nix               # Entry point: inputs and outputs
+├── flake.lock              # Lock file (pinned versions)
 └── home-manager/
-    ├── home.nix            # Configurazione principale
+    ├── home.nix            # Main configuration
     └── apps/
-        └── tmux.nix        # Configurazione tmux
+        └── tmux.nix        # Tmux configuration
 ```
