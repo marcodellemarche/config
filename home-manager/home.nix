@@ -6,6 +6,7 @@
     ./apps/git.nix
     ./apps/dev.nix
     ./apps/ssh.nix
+    ./apps/gpg.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -34,14 +35,36 @@
   # Add ~/.opencode/bin to PATH
   home.sessionPath = [ "/home/marcodellemarche/.opencode/bin" ];
 
-  xdg.desktopEntries.brave = {
+  xdg.desktopEntries.brave-browser = {
     name = "Brave Web Browser";
     genericName = "Web Browser";
-    exec = "brave --no-sandbox";
+    exec = "brave --no-sandbox %U";
     terminal = false;
+    startupNotify = true;
     categories = [ "Network" "WebBrowser" ];
-    mimeType = [ "text/html" "text/xml" ];
+    mimeType = [
+      "text/html"
+      "text/xml"
+      "application/xhtml+xml"
+      "application/pdf"
+      "x-scheme-handler/http"
+      "x-scheme-handler/https"
+      "x-scheme-handler/about"
+      "x-scheme-handler/unknown"
+    ];
     icon = "brave-browser";
+    settings.StartupWMClass = "brave-browser";
+  };
+
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "brave-browser.desktop";
+      "x-scheme-handler/http" = "brave-browser.desktop";
+      "x-scheme-handler/https" = "brave-browser.desktop";
+      "x-scheme-handler/about" = "brave-browser.desktop";
+      "x-scheme-handler/unknown" = "brave-browser.desktop";
+    };
   };
 
   xdg.desktopEntries.slack = {
@@ -57,11 +80,13 @@
   xdg.desktopEntries.code = {
     name = "Visual Studio Code";
     genericName = "Code Editor";
-    exec = "code --no-sandbox";
+    exec = "code --no-sandbox %F";
     terminal = false;
+    startupNotify = true;
     categories = [ "Development" ];
     mimeType = [ "text/html" "text/xml" ];
-    icon = "code";
+    icon = "vscode";
+    settings.StartupWMClass = "Code";
   };
 
   xdg.desktopEntries.obsidian = {

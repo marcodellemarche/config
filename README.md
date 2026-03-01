@@ -60,6 +60,40 @@ mkdir -p ~/.ssh/config.d
 coder config-ssh --ssh-config-file ~/.ssh/config.d/coder
 ```
 
+### 7. Import GPG key and enable git signing
+
+The GPG key is stored in Bitwarden. Export it from an existing machine with:
+
+```sh
+gpg --export-secret-keys --armor YOUR_KEY_ID > gpg-private.asc
+```
+
+On the new machine, import and trust it:
+
+```sh
+gpg --import gpg-private.asc
+gpg --edit-key YOUR_KEY_ID   # then type "trust", select 5 (ultimate), "quit"
+rm gpg-private.asc
+```
+
+Get the key ID and update `home-manager/apps/git.nix`:
+
+```sh
+gpg --list-secret-keys --keyid-format LONG
+# Replace YOUR_KEY_ID in git.nix with the key ID from the sec line
+# e.g. sec   ed25519/ABC123DEF456 → key ID is ABC123DEF456
+home-reload
+```
+
+### 8. Set Brave as default browser
+
+Brave is configured as the default via `xdg.mimeApps`. After applying the config, verify with:
+
+```sh
+xdg-settings get default-web-browser   # should show brave-browser.desktop
+xdg-open https://example.com           # should open in Brave
+```
+
 ---
 
 ## Updating
@@ -141,6 +175,14 @@ echo "use flake" > ~/cubbit/.envrc
 direnv allow
 ```
 
+### GPG
+
+GPG and gpg-agent are managed declaratively (`apps/gpg.nix`). The agent uses pinentry-gnome3 and caches passphrases for 1 hour (max 2 hours). Git commit signing is enabled by default — just set your key ID in `apps/git.nix`.
+
+### Default browser
+
+Brave is set as the default browser via `xdg.mimeApps`. All `http`/`https` links opened with `xdg-open` route to Brave.
+
 ### SSH
 
 Static hosts are declared in `apps/ssh.nix` and deployed to `~/.ssh/config`. Connect with their short names:
@@ -169,5 +211,6 @@ nix/
         ├── git.nix         # Git settings, LFS, aliases
         ├── dev.nix         # Dev packages, bazel wrapper, direnv
         ├── tmux.nix        # Tmux with resurrect/continuum, xclip
-        └── ssh.nix         # SSH static hosts; coder via ~/.ssh/config.d/coder
+        ├── ssh.nix         # SSH static hosts; coder via ~/.ssh/config.d/coder
+        └── gpg.nix         # GPG keyring, gpg-agent with pinentry-gnome3
 ```

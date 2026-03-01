@@ -39,6 +39,7 @@ Entry point: `flake.nix` → `home-manager/home.nix` → `home-manager/apps/*.ni
 - Fonts, cursor, `sessionPath`
 - Desktop app packages (slack, brave, vscode, obsidian) + JetBrains Mono Nerd Font
 - `xdg.desktopEntries` for sandbox-mode GUI apps
+- `xdg.mimeApps` — Brave as default browser
 
 **`home-manager/apps/`** — one file per concern
 | File | Owns |
@@ -47,7 +48,8 @@ Entry point: `flake.nix` → `home-manager/home.nix` → `home-manager/apps/*.ni
 | `git.nix` | git settings, LFS, aliases, merge tool |
 | `dev.nix` | all CLI/dev packages + bazel wrapper |
 | `tmux.nix` | tmux with resurrect/continuum, vi keys |
-| `ssh.nix` | placeholder (disabled — `~/.ssh/config` is managed by coder) |
+| `ssh.nix` | SSH static hosts in matchBlocks + Include for coder |
+| `gpg.nix` | GPG keyring, gpg-agent with pinentry-gnome3 |
 
 **`home-manager/config/p10k.zsh`** — deployed via `home.file.".p10k.zsh".source`
 
@@ -59,6 +61,8 @@ Entry point: `flake.nix` → `home-manager/home.nix` → `home-manager/apps/*.ni
 
 **Unfree packages:** `nixpkgs.config.allowUnfree = true` is set in `home.nix`. No per-package override needed.
 
-**SSH config:** `~/.ssh/config` is not managed by home-manager (coder auto-writes into it). Don't enable `programs.ssh` without first handling the coder-managed sections.
+**SSH config:** managed by `programs.ssh` in `ssh.nix`. Static hosts are in `matchBlocks`. Coder sections go in `~/.ssh/config.d/coder` (included via `Include`).
+
+**GPG:** managed by `programs.gpg` + `services.gpg-agent` in `gpg.nix`. Git signing key ID must be set in `git.nix` after importing the key.
 
 **New files:** must be `git add`ed before they're visible to the flake evaluator.

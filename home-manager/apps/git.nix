@@ -3,13 +3,11 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    # To enable commit signing, get your key ID with:
-    #   gpg --list-secret-keys --keyid-format LONG
-    # Then uncomment:
-    # signing = {
-    #   key = "YOUR_KEY_ID";
-    #   signByDefault = true;
-    # };
+    # Get your key ID with: gpg --list-secret-keys --keyid-format LONG
+    signing = {
+      key = "8D0459F290140A92";
+      signByDefault = true;
+    };
 
     settings = {
       user = {
