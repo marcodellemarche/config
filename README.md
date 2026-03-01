@@ -33,6 +33,33 @@ chsh -s $(which zsh)
 
 Restart the terminal. From here on, use `home-reload` for subsequent updates.
 
+### 5. Restore SSH key
+
+The SSH keypair is stored in Bitwarden. Retrieve `id_ed25519` (private) and `id_ed25519.pub` (public) and place them in `~/.ssh/`:
+
+```sh
+mkdir -p ~/.ssh
+# paste/copy the key files from Bitwarden, then:
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+```
+
+Alternatively, generate a fresh keypair and add the public key to your accounts:
+
+```sh
+ssh-keygen -t ed25519 -C "mferretti93@gmail.com"
+cat ~/.ssh/id_ed25519.pub   # add this to GitHub, coder, servers, etc.
+```
+
+### 6. Connect coder
+
+```sh
+coder login https://coder.cubbit.dev
+mkdir -p ~/.ssh/config.d
+coder config-ssh --ssh-config-file ~/.ssh/config.d/coder
+```
+
 ---
 
 ## Updating
@@ -69,5 +96,5 @@ nix/
         ├── git.nix         # Git settings, LFS, aliases
         ├── dev.nix         # Dev packages, bazel wrapper
         ├── tmux.nix        # Tmux with resurrect/continuum
-        └── ssh.nix         # SSH config (placeholder)
+        └── ssh.nix         # SSH static hosts; coder via ~/.ssh/config.d/coder
 ```
