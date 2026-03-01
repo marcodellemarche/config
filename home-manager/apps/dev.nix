@@ -1,5 +1,11 @@
 { pkgs, pkgs-go, ... }:
 {
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+
   home.packages = [
     pkgs.vim
     pkgs.curl
@@ -7,7 +13,6 @@
     pkgs.yq
     pkgs.pwgen
     pkgs.gnumake
-    pkgs.direnv
     pkgs.gh
 
     pkgs.go-task
