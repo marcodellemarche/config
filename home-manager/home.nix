@@ -1,6 +1,10 @@
 { config, lib, pkgs, pkgs-go, users, ... }:
 
 {
+  imports = [
+    ./apps/tmux.nix
+  ];
+
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -50,7 +54,10 @@
     pkgs.gnumake
     pkgs.coder
     pkgs.go-swag
+    pkgs.nerd-fonts.jetbrains-mono
   ];
+
+  fonts.fontconfig.enable = true;
   
   # These cursor things maybe are not needed
   home.pointerCursor.gtk.enable = true;
