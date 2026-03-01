@@ -183,6 +183,14 @@ GPG and gpg-agent are managed declaratively (`apps/gpg.nix`). The agent uses pin
 
 Brave is set as the default browser via `xdg.mimeApps`. All `http`/`https` links opened with `xdg-open` route to Brave.
 
+### Rust
+
+Rust toolchain is available globally: `rustc`, `cargo`, `clippy`, `rustfmt`, and `rust-analyzer`. The VSCode `rust-analyzer` extension picks up the nix-provided server automatically.
+
+### Python
+
+Python 3.12 is available with `pip` and `matplotlib` pre-installed. Managed via `apps/dev.nix`.
+
 ### SSH
 
 Static hosts are declared in `apps/ssh.nix` and deployed to `~/.ssh/config`. Connect with their short names:
