@@ -42,6 +42,8 @@
     pkgs.gimp
     pkgs.vlc
     pkgs.neofetch
+    pkgs.wireshark
+    pkgs.claude-code
   ];
 
 }
