@@ -22,7 +22,7 @@
     # Bazel wrapper: exposes `bazel` in PATH backed by bazelisk
     (pkgs.writeShellScriptBin "bazel" "exec ${pkgs.bazelisk}/bin/bazelisk \"$@\"")
     pkgs-go.go_1_24
-    (pkgs.python311.withPackages (ps: with ps; [
+    (pkgs.python312.withPackages (ps: with ps; [
       pip
       matplotlib
     ]))
