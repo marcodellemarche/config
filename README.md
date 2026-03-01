@@ -81,6 +81,79 @@ home-reload
 | `home-manager generations` | List previous generations |
 | `home-manager rollback` | Revert to the previous generation |
 
+---
+
+## Features
+
+### Shell
+
+| Alias | Expands to | Notes |
+|-------|-----------|-------|
+| `ls` | `eza` | Modern `ls` with colour and icons |
+| `ll` | `eza -l` | Long listing |
+| `la` | `eza -la` | Long listing including hidden files |
+| `lt` | `eza --tree` | Tree view |
+| `z <name>` | `zoxide` | Jump to a frecently-used directory by fuzzy name |
+| `home-reload` | `home-manager switch …` | Re-apply the nix config |
+
+**fzf** is available in the shell: `Ctrl+R` for history search, `Ctrl+T` for file search, `Alt+C` to cd into a directory.
+
+### Tmux
+
+Key bindings (prefix is `Ctrl+B`):
+
+| Binding | Action |
+|---------|--------|
+| `prefix + c` | New window (preserves current path) |
+| `prefix + "` | Split horizontally (preserves current path) |
+| `prefix + %` | Split vertically (preserves current path) |
+| `prefix + v` | Enter copy mode, start selection |
+| `y` / `Enter` (copy mode) | Copy selection to **system clipboard** via xclip |
+| Mouse drag (copy mode) | Copy selection to **system clipboard** on release |
+
+Sessions are saved automatically every 10 minutes via **tmux-continuum** and restored on next start via **tmux-resurrect**.
+
+### Git
+
+Useful aliases (usable as `git <alias>`):
+
+| Alias | Command |
+|-------|---------|
+| `cane` | `commit --amend --no-edit` |
+| `fap` | `fetch -ap` |
+| `lol` | Pretty one-line graph log |
+| `lola` | Same, all branches |
+| `rod` | `rebase origin/develop` |
+| `puf` | `push --force` |
+| `pr` | `pull --rebase` |
+
+### Bazel
+
+`bazel` is a wrapper around `bazelisk` — it automatically downloads and uses the correct Bazel version declared in `.bazelversion`. No manual version management needed.
+
+### direnv
+
+`direnv` is active with `nix-direnv`. In any directory with an `.envrc`, the environment is loaded/unloaded automatically on `cd`. For nix-based projects, add `use flake` to `.envrc` and the flake's dev shell will activate instantly (result is cached by nix-direnv).
+
+```sh
+# Example .envrc
+echo "use flake" > ~/cubbit/.envrc
+direnv allow
+```
+
+### SSH
+
+Static hosts are declared in `apps/ssh.nix` and deployed to `~/.ssh/config`. Connect with their short names:
+
+```sh
+ssh giulio-1
+ssh pacco-3
+```
+
+All connections use `~/.ssh/id_ed25519` by default with keepalive settings (`ServerAliveInterval 60`).
+
+---
+
 ## Structure
 
 ```
@@ -94,7 +167,7 @@ nix/
     └── apps/
         ├── zsh.nix         # Zsh, p10k, fzf, eza, zoxide, aliases
         ├── git.nix         # Git settings, LFS, aliases
-        ├── dev.nix         # Dev packages, bazel wrapper
-        ├── tmux.nix        # Tmux with resurrect/continuum
+        ├── dev.nix         # Dev packages, bazel wrapper, direnv
+        ├── tmux.nix        # Tmux with resurrect/continuum, xclip
         └── ssh.nix         # SSH static hosts; coder via ~/.ssh/config.d/coder
 ```
