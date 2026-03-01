@@ -44,9 +44,11 @@
       bind '"' split-window -v -c '#{pane_current_path}'
       bind % split-window -h -c '#{pane_current_path}'
 
-      # Vi copy mode bindings
+      # Vi copy mode bindings — copy to system clipboard via xclip
       bind-key -T copy-mode-vi 'v' send -X begin-selection
-      bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
+      bind-key -T copy-mode-vi 'y' send -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+      bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
+      bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'xclip -in -selection clipboard'
     '';
   };
 }

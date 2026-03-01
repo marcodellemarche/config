@@ -9,6 +9,7 @@
   home.packages = [
     pkgs.vim
     pkgs.curl
+    pkgs.xclip
     pkgs.jq
     pkgs.yq
     pkgs.pwgen
