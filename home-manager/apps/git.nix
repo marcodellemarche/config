@@ -1,5 +1,7 @@
-{ ... }:
+{ pkgs, ... }:
 {
+  home.packages = [ pkgs.delta ];
+
   programs.git = {
     enable = true;
     lfs.enable = true;
@@ -32,6 +34,12 @@
       };
       mergetool.prompt = "false";
       core.editor = "vim";
+      core.pager = "delta";
+      interactive.diffFilter = "delta --color-only";
+      delta = {
+        navigate = true;
+        side-by-side = true;
+      };
     };
     # Per-directory overrides (e.g. different email for work repos):
     # includes = [

@@ -127,8 +127,11 @@ home-reload
 | `ll` | `eza -l` | Long listing |
 | `la` | `eza -la` | Long listing including hidden files |
 | `lt` | `eza --tree` | Tree view |
+| `cat` | `bat` | Syntax-highlighted file viewer |
 | `z <name>` | `zoxide` | Jump to a frecently-used directory by fuzzy name |
 | `home-reload` | `home-manager switch …` | Re-apply the nix config |
+
+Also available: `fd` (fast `find`), `rg` (ripgrep — fast `grep`), `btop` (system monitor).
 
 **fzf** is available in the shell: `Ctrl+R` for history search, `Ctrl+T` for file search, `Alt+C` to cd into a directory.
 
@@ -161,6 +164,8 @@ Useful aliases (usable as `git <alias>`):
 | `puf` | `push --force` |
 | `pr` | `pull --rebase` |
 
+**delta** is configured as the git pager — diffs are syntax-highlighted with side-by-side view.
+
 ### Bazel
 
 `bazel` is a wrapper around `bazelisk` — it automatically downloads and uses the correct Bazel version declared in `.bazelversion`. No manual version management needed.
@@ -185,7 +190,9 @@ Brave is set as the default browser via `xdg.mimeApps`. All `http`/`https` links
 
 ### Rust
 
-Rust toolchain is available globally: `rustc`, `cargo`, `clippy`, `rustfmt`, and `rust-analyzer`. The VSCode `rust-analyzer` extension picks up the nix-provided server automatically.
+Rust toolchain is managed via [fenix](https://github.com/nix-community/fenix) (a Nix flake for Rust toolchains) rather than the individual nixpkgs packages. This matters because fenix bundles `rust-src` directly into the sysroot, so `rustc --print sysroot` returns a path that contains `lib/rustlib/src/rust/library`. `rust-analyzer` discovers stdlib sources via the sysroot and works correctly in both the terminal and VSCode without any extra configuration.
+
+Available: `rustc`, `cargo`, `clippy`, `rustfmt`, `rust-analyzer`.
 
 ### Python
 

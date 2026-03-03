@@ -17,6 +17,7 @@
       ll  = "eza -l";
       la  = "eza -la";
       lt  = "eza --tree";
+      cat = "bat";
     };
     oh-my-zsh = {
       enable = true;

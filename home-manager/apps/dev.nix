@@ -1,4 +1,4 @@
-{ pkgs, pkgs-go, ... }:
+{ pkgs, pkgs-go, pkgs-rust, ... }:
 {
   programs.direnv = {
     enable = true;
@@ -15,6 +15,10 @@
     pkgs.pwgen
     pkgs.gnumake
     pkgs.gh
+    pkgs.bat
+    pkgs.fd
+    pkgs.ripgrep
+    pkgs.btop
 
     pkgs.go-task
     pkgs.go-swag
@@ -26,11 +30,19 @@
       pip
       matplotlib
     ]))
-    pkgs.rustc
-    pkgs.cargo
-    pkgs.clippy
-    pkgs.rustfmt
-    pkgs.rust-analyzer
+    # Rust toolchain via fenix (not pkgs.rustc etc.) so that rust-src is bundled
+    # into the sysroot. rust-analyzer runs `rustc --print sysroot` to locate the
+    # stdlib source — it must live at $sysroot/lib/rustlib/src/rust/library.
+    # Individual nixpkgs packages omit rust-src, breaking rust-analyzer in GUI
+    # apps like VSCode that don't inherit shell session variables.
+    (pkgs-rust.stable.withComponents [
+      "cargo"
+      "clippy"
+      "rust-src"
+      "rustc"
+      "rustfmt"
+    ])
+    pkgs-rust.rust-analyzer
     pkgs.nodejs
     pkgs.kubectl
     pkgs.kind

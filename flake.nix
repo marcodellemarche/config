@@ -8,22 +8,28 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = {
     nixpkgs,
     nixpkgs-go,
     home-manager,
+    fenix,
     ...
   }: let
     # system = "aarch64-linux"; If you are running on ARM powered computer
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
     pkgs-go = nixpkgs-go.legacyPackages.${system};
+    pkgs-rust = fenix.packages.${system};
   in {
     homeConfigurations = {
       marcodellemarche = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit pkgs-go; };
+        extraSpecialArgs = { inherit pkgs-go pkgs-rust; };
         modules = [
           ./home-manager/home.nix
         ];
