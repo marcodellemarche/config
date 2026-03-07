@@ -1,4 +1,4 @@
-{ pkgs, pkgs-go, pkgs-rust, ... }:
+{ lib, pkgs, pkgs-go, pkgs-rust, ... }:
 {
   programs.direnv = {
     enable = true;
@@ -55,13 +55,14 @@
     pkgs.postgresql_15
     pkgs.redis
     pkgs.sqlite
-    pkgs.dbeaver-bin
     pkgs.coder
     pkgs.gimp
     pkgs.vlc
     pkgs.neofetch
     pkgs.wireshark
     pkgs.claude-code
+  ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
+    pkgs.dbeaver-bin
   ];
 
 }
