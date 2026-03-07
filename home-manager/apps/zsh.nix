@@ -8,7 +8,7 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
-      home-reload = "home-manager switch --flake ~/nix/#$USER";
+      home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER";
       slack    = "slack --no-sandbox";
       brave    = "brave --no-sandbox";
       code     = "code --no-sandbox";
@@ -26,6 +26,9 @@
     initContent = ''
       source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
       [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+
+      # Ghostfolio secrets (not in version control)
+      [[ -f ~/.config/ghostfolio/env ]] && set -a && source ~/.config/ghostfolio/env && set +a
     '';
   };
 

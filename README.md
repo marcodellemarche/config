@@ -188,6 +188,10 @@ GPG and gpg-agent are managed declaratively (`apps/gpg.nix`). The agent uses pin
 
 Brave is set as the default browser via `xdg.mimeApps`. All `http`/`https` links opened with `xdg-open` route to Brave.
 
+### Ghostfolio
+
+[Ghostfolio](https://ghostfol.io) is an open-source self-hosted wealth management web app. Managed via `pkgs.ghostfolio` in `home.nix`. Run with `ghostfolio` and access via browser.
+
 ### Rust
 
 Rust toolchain is managed via [fenix](https://github.com/nix-community/fenix) (a Nix flake for Rust toolchains) rather than the individual nixpkgs packages. This matters because fenix bundles `rust-src` directly into the sysroot, so `rustc --print sysroot` returns a path that contains `lib/rustlib/src/rust/library`. `rust-analyzer` discovers stdlib sources via the sysroot and works correctly in both the terminal and VSCode without any extra configuration.
