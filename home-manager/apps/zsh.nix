@@ -8,7 +8,7 @@
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     shellAliases = {
-      home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER";
+      home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER --impure";
       slack    = "slack --no-sandbox";
       brave    = "brave --no-sandbox";
       code     = "code --no-sandbox";
