@@ -20,20 +20,21 @@
     fenix,
     ...
   }: let
-    # system = "aarch64-linux"; If you are running on ARM powered computer
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-    pkgs-go = nixpkgs-go.legacyPackages.${system};
-    pkgs-rust = fenix.packages.${system};
+    mkConfig = system: let
+      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs-go = nixpkgs-go.legacyPackages.${system};
+      pkgs-rust = fenix.packages.${system};
+    in home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
+      extraSpecialArgs = { inherit pkgs-go pkgs-rust; };
+      modules = [
+        ./home-manager/home.nix
+      ];
+    };
   in {
     homeConfigurations = {
-      marcodellemarche = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = { inherit pkgs-go pkgs-rust; };
-        modules = [
-          ./home-manager/home.nix
-        ];
-      };
+      marcodellemarche = mkConfig "x86_64-linux";
+      "marcodellemarche@aarch64-linux" = mkConfig "aarch64-linux";
     };
   };
 }
