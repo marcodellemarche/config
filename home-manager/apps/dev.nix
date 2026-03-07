@@ -54,6 +54,7 @@
     pkgs.google-cloud-sdk
     pkgs.postgresql_15
     pkgs.redis
+    pkgs.sqlite
     pkgs.dbeaver-bin
     pkgs.coder
     pkgs.gimp
