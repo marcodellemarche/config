@@ -24,7 +24,6 @@
     pkgs.vscode
     pkgs.obsidian
     pkgs.koreader
-    pkgs.ghostfolio
   ];
 
   # These cursor things maybe are not needed
