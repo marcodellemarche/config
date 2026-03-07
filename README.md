@@ -15,7 +15,7 @@ Restart the terminal (or run `source /nix/var/nix/profiles/default/etc/profile.d
 ### 2. Clone this repo
 
 ```sh
-git clone https://github.com/marcodellemarche/nix ~/nix
+git clone https://github.com/marcodellemarche/config.git ~/nix
 ```
 
 ### 3. Apply the configuration (first time)
