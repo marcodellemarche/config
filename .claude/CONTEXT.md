@@ -7,7 +7,7 @@
 
 ## Current state
 
-The configuration is healthy and applied. Removed `builtins.currentSystem` / `--impure` from `flake.nix` by introducing a `mkConfig` helper that takes `system` and `username`. Three explicit `homeConfigurations` are defined: `marcodellemarche@x86_64-linux`, `ubuntu@x86_64-linux`, `ubuntu@aarch64-linux`. The `username` is passed via `extraSpecialArgs` and used in `home.nix` instead of hardcoded values.
+The configuration is healthy and applied. Removed `builtins.currentSystem` / `--impure` from `flake.nix` by introducing a `mkConfig` helper that takes `system` and `username`. Two `homeConfigurations` are defined keyed by username: `marcodellemarche` (x86_64-linux) and `ubuntu` (aarch64-linux). The `username` is passed via `extraSpecialArgs` and used in `home.nix` instead of hardcoded values.
 
 ---
 

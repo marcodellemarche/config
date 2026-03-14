@@ -32,8 +32,7 @@
       ];
     };
   in {
-    homeConfigurations."marcodellemarche@x86_64-linux" = mkConfig "x86_64-linux" "marcodellemarche";
-    homeConfigurations."ubuntu@x86_64-linux" = mkConfig "x86_64-linux" "ubuntu";
-    homeConfigurations."ubuntu@aarch64-linux" = mkConfig "aarch64-linux" "ubuntu";
+    homeConfigurations.marcodellemarche = mkConfig "x86_64-linux" "marcodellemarche";
+    homeConfigurations.ubuntu = mkConfig "aarch64-linux" "ubuntu";
   };
 }
