@@ -1,4 +1,4 @@
-{ config, lib, pkgs, pkgs-go, users, ... }:
+{ config, lib, pkgs, pkgs-go, username, ... }:
 {
   imports = [
     ./apps/tmux.nix
@@ -11,8 +11,8 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  home.username = "marcodellemarche";
-  home.homeDirectory = "/home/marcodellemarche";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
   home.stateVersion = "23.05";
 
   fonts.fontconfig.enable = true;
@@ -35,7 +35,7 @@
   };
 
   # Add ~/.opencode/bin to PATH
-  home.sessionPath = [ "/home/marcodellemarche/.opencode/bin" ];
+  home.sessionPath = [ "/home/${username}/.opencode/bin" ];
 
   xdg.desktopEntries = {
     code = {

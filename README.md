@@ -21,8 +21,10 @@ git clone https://github.com/marcodellemarche/config.git ~/nix
 ### 3. Apply the configuration (first time)
 
 ```sh
-nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER
+nix run nixpkgs#home-manager -- switch --flake ~/nix
 ```
+
+> **Note:** home-manager automatically resolves `$USER@$(nix eval --expr builtins.currentSystem --raw)` to find the matching `homeConfigurations` entry (e.g. `marcodellemarche@x86_64-linux`).
 
 ### 4. Set zsh as the default shell
 
