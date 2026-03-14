@@ -61,6 +61,8 @@
     pkgs.neofetch
     pkgs.wireshark
     pkgs.claude-code
+    pkgs.gemini-cli
+    (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" ]; })
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];

@@ -23,3 +23,13 @@
   - Added to `CLAUDE.md` Known anti-patterns: always use `nix run nixpkgs#home-manager` or the full store path; never the bare command.
   - Added to `CLAUDE.md` Known anti-patterns: remove `~/.config/mimeapps.list` and `.backup` before every switch. Never use `-b backup` — investigate and delete conflicting files directly.
   - Added to `MEMORY.md`: correct procedure with explicit pre-deletion step.
+
+---
+
+## 2026-03-10 — home-manager switch failed without `--impure`
+
+- **What happened**: Applied `nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER` (no `--impure`). Build failed with `error: attribute 'currentSystem' missing` because `flake.nix` uses `builtins.currentSystem`, which requires impure evaluation mode.
+
+- **Root cause**: `CLAUDE.md` key commands section and `MEMORY.md` both listed the command without `--impure`. The `home-reload` alias already had `--impure` but Claude used the CLAUDE.md form directly.
+
+- **Fix**: Always append `--impure` to home-manager switch. Updated `MEMORY.md` and `README.md`. The `home-reload` alias was already correct.
