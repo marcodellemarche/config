@@ -13,11 +13,14 @@
       brave    = "brave --no-sandbox";
       code     = "code --no-sandbox";
       obsidian = "obsidian --no-sandbox";
+      chrome   = "google-chrome-stable --no-sandbox";
       ls  = "eza";
       ll  = "eza -l";
       la  = "eza -la";
       lt  = "eza --tree";
       cat = "bat";
+      xcopy = "xclip -selection clipboard";
+      xpaste = "xclip -o -selection clipboard";
     };
     oh-my-zsh = {
       enable = true;

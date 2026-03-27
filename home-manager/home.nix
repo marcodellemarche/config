@@ -21,10 +21,12 @@
     pkgs.nerd-fonts.jetbrains-mono
     pkgs.vscode
     pkgs.koreader
+    pkgs.lmstudio
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.slack
     pkgs.brave
     pkgs.obsidian
+    pkgs.google-chrome
   ];
 
   # These cursor things maybe are not needed
@@ -79,6 +81,26 @@
       mimeType = [ ];
       icon = "slack";
     };
+    google-chrome = {
+      name = "Google Chrome";
+      genericName = "Web Browser";
+      exec = "google-chrome-stable --no-sandbox %U";
+      terminal = false;
+      startupNotify = true;
+      categories = [ "Network" "WebBrowser" ];
+      mimeType = [
+        "text/html"
+        "text/xml"
+        "application/xhtml+xml"
+        "application/pdf"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "x-scheme-handler/about"
+        "x-scheme-handler/unknown"
+      ];
+      icon = "google-chrome";
+      settings.StartupWMClass = "Google-chrome";
+    };
     obsidian = {
       name = "Obsidian";
       genericName = "Text Editor";
@@ -87,6 +109,15 @@
       categories = [ "Utility" ];
       mimeType = [ "text/html" "text/xml" ];
       icon = "obsidian";
+    };
+    lm-studio = {
+      name = "LM Studio";
+      genericName = "Local LLM Interface";
+      exec = "lm-studio --no-sandbox";
+      terminal = false;
+      categories = [ "Utility" ];
+      mimeType = [ ];
+      icon = "lm-studio";
     };
   };
 

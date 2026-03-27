@@ -58,8 +58,9 @@
     pkgs.coder
     pkgs.gimp
     pkgs.vlc
-    pkgs.neofetch
+    pkgs.fastfetch
     pkgs.wireshark
+    pkgs.uv
     pkgs.claude-code
     pkgs.gemini-cli
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" ]; })
