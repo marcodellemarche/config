@@ -27,6 +27,7 @@
     pkgs.brave
     pkgs.obsidian
     pkgs.google-chrome
+    pkgs.android-studio
   ];
 
   # These cursor things maybe are not needed
@@ -36,8 +37,16 @@
     name = "Vanilla-DMZ";
   };
 
-  # Add ~/.opencode/bin to PATH
-  home.sessionPath = [ "/home/${username}/.opencode/bin" ];
+  # Add ~/.opencode/bin and Android SDK tools to PATH
+  home.sessionPath = [
+    "/home/${username}/.opencode/bin"
+    "/home/${username}/Android/Sdk/platform-tools"
+    "/home/${username}/Android/Sdk/emulator"
+  ];
+
+  home.sessionVariables = {
+    ANDROID_HOME = "/home/${username}/Android/Sdk";
+  };
 
   xdg.desktopEntries = {
     code = {
@@ -118,6 +127,16 @@
       categories = [ "Utility" ];
       mimeType = [ ];
       icon = "lm-studio";
+    };
+    android-studio = {
+      name = "Android Studio";
+      genericName = "IDE";
+      exec = "android-studio";
+      terminal = false;
+      startupNotify = true;
+      categories = [ "Development" "IDE" ];
+      mimeType = [ ];
+      icon = "android-studio";
     };
   };
 

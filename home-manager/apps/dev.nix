@@ -43,6 +43,8 @@
       "rustfmt"
     ])
     pkgs-rust.rust-analyzer
+    pkgs.jdk17
+    pkgs.glib   # gsettings — necessario per android-studio FHS sandbox
     pkgs.nodejs
     pkgs.kubectl
     pkgs.kind
