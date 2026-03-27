@@ -190,6 +190,28 @@ GPG and gpg-agent are managed declaratively (`apps/gpg.nix`). The agent uses pin
 
 Brave is set as the default browser via `xdg.mimeApps`. All `http`/`https` links opened with `xdg-open` route to Brave.
 
+### Android Studio
+
+Android Studio is managed via `pkgs.android-studio` (x86_64 only). The Android SDK is downloaded by the IDE wizard on first launch to `~/Android/Sdk`.
+
+`ANDROID_HOME` and the `platform-tools`/`emulator` paths are set automatically via `home.sessionVariables` and `home.sessionPath` — no manual `.zshrc` edits needed.
+
+**System-level prerequisites** (one-time, requires sudo — not manageable by home-manager):
+
+```sh
+# Allow unprivileged user namespaces (required by the FHS sandbox)
+sudo sysctl -w kernel.unprivileged_userns_clone=1
+echo 'kernel.unprivileged_userns_clone=1' | sudo tee /etc/sysctl.d/99-unprivileged-userns.conf
+
+# Allow AppArmor to use them
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/99-apparmor-userns.conf
+```
+
+After first launch, run the "Standard installation" wizard — it downloads the SDK, Build-Tools, and Platform-Tools automatically.
+
+---
+
 ### Rust
 
 Rust toolchain is managed via [fenix](https://github.com/nix-community/fenix) (a Nix flake for Rust toolchains) rather than the individual nixpkgs packages. This matters because fenix bundles `rust-src` directly into the sysroot, so `rustc --print sysroot` returns a path that contains `lib/rustlib/src/rust/library`. `rust-analyzer` discovers stdlib sources via the sysroot and works correctly in both the terminal and VSCode without any extra configuration.
