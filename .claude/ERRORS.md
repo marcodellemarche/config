@@ -21,7 +21,7 @@
 
 - **Systemic fix**:
   - Added to `CLAUDE.md` Known anti-patterns: always use `nix run nixpkgs#home-manager` or the full store path; never the bare command.
-  - Added to `CLAUDE.md` Known anti-patterns: remove `~/.config/mimeapps.list` and `.backup` before every switch. Never use `-b backup` — investigate and delete conflicting files directly.
+  - ~~Added to `CLAUDE.md` Known anti-patterns: remove `~/.config/mimeapps.list` before every switch.~~ **Resolved 2026-04-16**: added `xdg.configFile."mimeapps.list".force = true` in `home.nix` — home-manager now overwrites the file automatically, no manual deletion needed.
   - Added to `MEMORY.md`: correct procedure with explicit pre-deletion step.
 
 ---

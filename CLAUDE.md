@@ -114,14 +114,7 @@ Entry point: `flake.nix` → `home-manager/home.nix` → `home-manager/apps/*.ni
 **home-manager is never in Claude's PATH.**
 Always use `nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER`. Never try the bare `home-manager` command first.
 
-**`~/.config/mimeapps.list` will always conflict.**
-GNOME and desktop apps write to this file outside of nix. Since home-manager manages it via `xdg.mimeApps`, remove it before every `home-manager switch`:
-
-```sh
-rm -f ~/.config/mimeapps.list ~/.config/mimeapps.list.backup
-```
-
-Do not use `-b backup` to work around conflicts — if a `.backup` file already exists from a prior run, that flag fails too. Investigate and delete conflicting files directly.
+**`~/.config/mimeapps.list`** — handled automatically by `xdg.configFile."mimeapps.list".force = true` in `home.nix`. No manual deletion needed.
 
 **Bazel:** use the `writeShellScriptBin "bazel"` wrapper delegating to `bazelisk`. Do not add `pkgs.bazelisk` directly.
 

@@ -150,4 +150,6 @@
       "x-scheme-handler/unknown" = "brave-browser.desktop";
     };
   };
+
+  xdg.configFile."mimeapps.list".force = true;
 }

@@ -28,5 +28,4 @@ No active tasks. Waiting for user direction.
 
 ## Active warnings
 
-- `~/.config/mimeapps.list` will conflict on every `home-manager switch` unless deleted first — GNOME writes to it outside of nix. See Known anti-patterns in `CLAUDE.md`.
 - The nix store path for home-manager (`/nix/store/60xvqicq.../bin/home-manager`) may become stale after a `nix flake update`. If it fails, fall back to `nix run nixpkgs#home-manager`.
