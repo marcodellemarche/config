@@ -13,6 +13,7 @@
     pkgs.jq
     pkgs.yq
     pkgs.pwgen
+    pkgs.gcc
     pkgs.gnumake
     pkgs.gh
     pkgs.bat
