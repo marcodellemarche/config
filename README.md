@@ -222,6 +222,23 @@ Available: `rustc`, `cargo`, `clippy`, `rustfmt`, `rust-analyzer`.
 
 Python 3.12 is available with `pip` and `matplotlib` pre-installed. Managed via `apps/dev.nix`.
 
+### OCR
+
+**ocrmypdf** adds a searchable text layer to PDF files using Tesseract OCR. Managed via `pkgs.ocrmypdf` in `apps/dev.nix`.
+
+```sh
+# Add OCR layer to a scanned PDF
+ocrmypdf input.pdf output.pdf
+
+# Force re-OCR even if text is already present
+ocrmypdf --force-ocr input.pdf output.pdf
+
+# Specify language(s)
+ocrmypdf -l ita+eng input.pdf output.pdf
+```
+
+Supported languages are those enabled in the Tesseract override: `eng`, `ita`, `por`.
+
 ### SSH
 
 Static hosts are declared in `apps/ssh.nix` and deployed to `~/.ssh/config`. Connect with their short names:

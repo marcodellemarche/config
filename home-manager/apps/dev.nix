@@ -68,6 +68,7 @@
     pkgs.gemini-cli
     pkgs.yt-dlp
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })
+    pkgs.ocrmypdf
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];

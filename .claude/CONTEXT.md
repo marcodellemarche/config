@@ -1,7 +1,7 @@
 # Project Context
 
 > Updated by Claude at the end of every productive session.
-> Last updated: 2026-03-27
+> Last updated: 2026-04-26
 
 ---
 
@@ -19,6 +19,7 @@ No active tasks. Waiting for user direction.
 
 ## Recent decisions
 
+- [2026-04-26] Added `pkgs.ocrmypdf` to `apps/dev.nix` — adds searchable text layer to PDF via Tesseract
 - [2026-03-27] Added Android Studio dev environment: `pkgs.android-studio`, `pkgs.jdk17`, `pkgs.glib` (for gsettings in FHS sandbox), `ANDROID_HOME` sessionVariable, Android SDK paths in sessionPath
 - [2026-03-14] Removed `--impure` by replacing `builtins.currentSystem` with explicit `mkConfig system username` entries in `flake.nix`
 - [2026-03-07] Replaced wealthfolio with ghostfolio — ghostfolio is self-hosted/web-based, no desktop entry needed
