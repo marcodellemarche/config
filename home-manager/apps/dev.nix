@@ -69,6 +69,7 @@
     pkgs.yt-dlp
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })
     pkgs.ocrmypdf
+    pkgs.jira-cli-go
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];
