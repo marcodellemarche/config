@@ -67,7 +67,7 @@
     pkgs.claude-code
     pkgs.gemini-cli
     pkgs.yt-dlp
-    (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" ]; })
+    (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];
