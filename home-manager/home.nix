@@ -28,6 +28,7 @@
     pkgs.obsidian
     pkgs.google-chrome
     pkgs.android-studio
+    pkgs.hypnotix
   ];
 
   # These cursor things maybe are not needed
