@@ -30,6 +30,7 @@
     pkgs.android-studio
     pkgs.hypnotix
     pkgs.jetbrains.rust-rover
+    pkgs.jetbrains-toolbox
   ];
 
   # These cursor things maybe are not needed
