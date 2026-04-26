@@ -21,6 +21,8 @@
       cat = "bat";
       xcopy = "xclip -selection clipboard";
       xpaste = "xclip -o -selection clipboard";
+      daily = "~/vault/scripts/new-daily.sh";
+      daily-celeste = "~/vault/scripts/new-daily.sh celeste";
     };
     oh-my-zsh = {
       enable = true;

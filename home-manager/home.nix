@@ -29,6 +29,7 @@
     pkgs.google-chrome
     pkgs.android-studio
     pkgs.hypnotix
+    pkgs.jetbrains.rust-rover
   ];
 
   # These cursor things maybe are not needed
@@ -114,11 +115,12 @@
     obsidian = {
       name = "Obsidian";
       genericName = "Text Editor";
-      exec = "obsidian --no-sandbox";
+      exec = "obsidian --no-sandbox %U";
       terminal = false;
       categories = [ "Utility" ];
-      mimeType = [ "text/html" "text/xml" ];
+      mimeType = [ "text/html" "text/xml" "x-scheme-handler/obsidian" ];
       icon = "obsidian";
+      settings.StartupWMClass = "Obsidian";
     };
     lm-studio = {
       name = "LM Studio";
@@ -139,6 +141,16 @@
       mimeType = [ ];
       icon = "android-studio";
     };
+    rustrover = {
+      name = "RustRover";
+      genericName = "IDE";
+      exec = "rust-rover";
+      terminal = false;
+      startupNotify = true;
+      categories = [ "Development" "IDE" ];
+      mimeType = [ ];
+      icon = "rustrover";
+    };
   };
 
   xdg.mimeApps = lib.mkIf pkgs.stdenv.hostPlatform.isx86_64 {
@@ -149,8 +161,14 @@
       "x-scheme-handler/https" = "brave-browser.desktop";
       "x-scheme-handler/about" = "brave-browser.desktop";
       "x-scheme-handler/unknown" = "brave-browser.desktop";
+      "x-scheme-handler/obsidian" = "obsidian.desktop";
     };
   };
 
   xdg.configFile."mimeapps.list".force = true;
+
+  home.file.".claude/statusline-command.sh" = {
+    source = ./config/statusline-command.sh;
+    executable = true;
+  };
 }
