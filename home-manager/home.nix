@@ -29,8 +29,6 @@
     pkgs.google-chrome
     pkgs.android-studio
     pkgs.hypnotix
-    pkgs.jetbrains.rust-rover
-    pkgs.jetbrains-toolbox
   ];
 
   # These cursor things maybe are not needed
@@ -141,16 +139,6 @@
       categories = [ "Development" "IDE" ];
       mimeType = [ ];
       icon = "android-studio";
-    };
-    rustrover = {
-      name = "RustRover";
-      genericName = "IDE";
-      exec = "rust-rover";
-      terminal = false;
-      startupNotify = true;
-      categories = [ "Development" "IDE" ];
-      mimeType = [ ];
-      icon = "rustrover";
     };
   };
 

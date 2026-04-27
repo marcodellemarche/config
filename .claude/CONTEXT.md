@@ -33,3 +33,4 @@ No active tasks. Waiting for user direction.
 ## Active warnings
 
 - The nix store path for home-manager (`/nix/store/60xvqicq.../bin/home-manager`) may become stale after a `nix flake update`. If it fails, fall back to `nix run nixpkgs#home-manager`.
+- Use `nix flake update --flake ~/nix` to update flake inputs (correct form; old positional `nix flake update ~/nix` is outdated).
