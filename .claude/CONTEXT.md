@@ -21,6 +21,7 @@ No active tasks. Waiting for user direction.
 
 ## Recent decisions
 
+- [2026-05-20] Prepended `~/.nix-profile/bin` in `home.sessionPath` so Nix binaries (e.g. `sqlite3` 3.51.2) take precedence over duplicates shipped by Android SDK `platform-tools` (`sqlite3` 3.50.6). `pkgs.sqlite` was already installed in `apps/dev.nix`.
 - [2026-05-20] Installed Tailscale via APT (official `tailscale.com/install.sh`) — out-of-nix intentional install. Standalone home-manager cannot manage the system-level `tailscaled` systemd service, so the daemon + CLI are kept in apt. Documented in README under "Tailscale".
 - [2026-05-19] Added `pkgs.cloudflared` to `apps/dev.nix` — Cloudflare Tunnel client / Cloudflare Access proxy
 - [2026-05-18] Added `pkgs.wireguard-tools` to `apps/dev.nix` — userspace `wg`/`wg-quick`; kernel module già in mainline Linux su Ubuntu

@@ -196,6 +196,8 @@ Android Studio is managed via `pkgs.android-studio` (x86_64 only). The Android S
 
 `ANDROID_HOME` and the `platform-tools`/`emulator` paths are set automatically via `home.sessionVariables` and `home.sessionPath` — no manual `.zshrc` edits needed.
 
+`~/.nix-profile/bin` is prepended in `home.sessionPath` ahead of the Android SDK entries so that Nix-managed binaries take precedence over duplicates shipped inside `platform-tools` (e.g. `sqlite3`).
+
 **System-level prerequisites** (one-time, requires sudo — not manageable by home-manager):
 
 ```sh

@@ -38,8 +38,11 @@
     name = "Vanilla-DMZ";
   };
 
-  # Add ~/.opencode/bin and Android SDK tools to PATH
+  # Add ~/.opencode/bin and Android SDK tools to PATH.
+  # ~/.nix-profile/bin is prepended explicitly so Nix-managed binaries take
+  # precedence over Android SDK tools that ship duplicates (e.g. sqlite3).
   home.sessionPath = [
+    "/home/${username}/.nix-profile/bin"
     "/home/${username}/.opencode/bin"
     "/home/${username}/Android/Sdk/platform-tools"
     "/home/${username}/Android/Sdk/emulator"
