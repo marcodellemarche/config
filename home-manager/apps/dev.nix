@@ -63,6 +63,7 @@
     pkgs.vlc
     pkgs.fastfetch
     pkgs.wireshark
+    pkgs.wireguard-tools
     pkgs.uv
     pkgs.claude-code
     pkgs.gemini-cli
@@ -70,6 +71,7 @@
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })
     pkgs.ocrmypdf
     pkgs.jira-cli-go
+    pkgs.cloudflared
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];

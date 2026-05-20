@@ -239,6 +239,61 @@ ocrmypdf -l ita+eng input.pdf output.pdf
 
 Supported languages are those enabled in the Tesseract override: `eng`, `ita`, `por`.
 
+### cloudflared
+
+`cloudflared` is the Cloudflare Tunnel client. Useful for exposing local services through a Cloudflare Tunnel or reaching resources protected by Cloudflare Access.
+
+```sh
+# Authenticate against your Cloudflare account
+cloudflared tunnel login
+
+# Reach a host behind Cloudflare Access via SSH
+cloudflared access ssh --hostname ssh.example.com
+```
+
+Managed via `pkgs.cloudflared` in `apps/dev.nix`.
+
+### WireGuard
+
+`wireguard-tools` provides `wg` and `wg-quick` userspace utilities. The kernel module ships with mainline Linux on Ubuntu, so no extra setup is required.
+
+```sh
+# Bring up a tunnel from a config file at /etc/wireguard/wg0.conf
+sudo wg-quick up wg0
+sudo wg-quick down wg0
+
+# Show interface status
+sudo wg show
+```
+
+Configuration files live in `/etc/wireguard/` and must be owned by root (`chmod 600`). They are not managed by home-manager.
+
+### Tailscale
+
+Tailscale is **not** managed by nix. The `tailscaled` daemon needs to run as root via systemd, which standalone home-manager cannot provide. Installed via the official APT repo:
+
+```sh
+curl -fsSL https://tailscale.com/install.sh | sh
+```
+
+The installer adds `pkgs.tailscale.com` to APT sources, installs the `tailscale` package, and enables `tailscaled.service`.
+
+```sh
+# Authenticate and join the tailnet (opens a browser)
+sudo tailscale up
+
+# Status / IP / peers
+tailscale status
+tailscale ip
+
+# Disconnect (daemon keeps running)
+sudo tailscale down
+```
+
+Updates ride along with regular `apt upgrade`.
+
+---
+
 ### SSH
 
 Static hosts are declared in `apps/ssh.nix` and deployed to `~/.ssh/config`. Connect with their short names:
