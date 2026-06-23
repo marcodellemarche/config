@@ -10,7 +10,7 @@
     shellAliases = {
       home-reload = "nix run nixpkgs#home-manager -- switch --flake ~/nix/#$USER";
       slack    = "slack --no-sandbox";
-      brave    = "brave --no-sandbox";
+      brave    = "brave-browser";
       code     = "code --no-sandbox";
       obsidian = "obsidian --no-sandbox";
       chrome   = "google-chrome-stable --no-sandbox";

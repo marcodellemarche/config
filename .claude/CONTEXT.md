@@ -1,7 +1,7 @@
 # Project Context
 
 > Updated by Claude at the end of every productive session.
-> Last updated: 2026-05-20
+> Last updated: 2026-05-21
 
 ---
 
@@ -21,6 +21,8 @@ No active tasks. Waiting for user direction.
 
 ## Recent decisions
 
+- [2026-05-21] Migrated Brave from nix to APT — out-of-nix intentional install. Nix-built Chromium on Ubuntu cannot initialize GLX/EGL (`glXQueryExtensionsString returned NULL`), disabling WebGL and all GPU acceleration. APT package uses system libGL and gets hardware acceleration automatically. Removed `pkgs.brave`, `brave-browser` desktop entry, and `--no-sandbox` alias from nix; `xdg.mimeApps` default still works because APT ships `brave-browser.desktop`. Documented in README under "Brave".
+- [2026-05-21] Installed `nvidia-driver-595` (proprietary) + `nvidia-prime` via APT — out-of-nix intentional install. Replaces `nouveau`. PRIME profile set to `on-demand` (Intel primary, NVIDIA wakes for GPU-intensive apps). Documented in README under "NVIDIA driver". *Note: this alone was not enough to fix WebGL in nix-built Brave — see entry above.*
 - [2026-05-20] Prepended `~/.nix-profile/bin` in `home.sessionPath` so Nix binaries (e.g. `sqlite3` 3.51.2) take precedence over duplicates shipped by Android SDK `platform-tools` (`sqlite3` 3.50.6). `pkgs.sqlite` was already installed in `apps/dev.nix`.
 - [2026-05-20] Installed Tailscale via APT (official `tailscale.com/install.sh`) — out-of-nix intentional install. Standalone home-manager cannot manage the system-level `tailscaled` systemd service, so the daemon + CLI are kept in apt. Documented in README under "Tailscale".
 - [2026-05-19] Added `pkgs.cloudflared` to `apps/dev.nix` — Cloudflare Tunnel client / Cloudflare Access proxy

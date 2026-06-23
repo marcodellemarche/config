@@ -24,7 +24,6 @@
     pkgs.lmstudio
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.slack
-    pkgs.brave
     pkgs.obsidian
     pkgs.google-chrome
     pkgs.android-studio
@@ -65,26 +64,6 @@
       settings.StartupWMClass = "Code";
     };
   } // lib.optionalAttrs pkgs.stdenv.hostPlatform.isx86_64 {
-    brave-browser = {
-      name = "Brave Web Browser";
-      genericName = "Web Browser";
-      exec = "brave --no-sandbox %U";
-      terminal = false;
-      startupNotify = true;
-      categories = [ "Network" "WebBrowser" ];
-      mimeType = [
-        "text/html"
-        "text/xml"
-        "application/xhtml+xml"
-        "application/pdf"
-        "x-scheme-handler/http"
-        "x-scheme-handler/https"
-        "x-scheme-handler/about"
-        "x-scheme-handler/unknown"
-      ];
-      icon = "brave-browser";
-      settings.StartupWMClass = "brave-browser";
-    };
     slack = {
       name = "Slack";
       genericName = "Chat";
