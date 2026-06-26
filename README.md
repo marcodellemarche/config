@@ -255,6 +255,23 @@ cloudflared access ssh --hostname ssh.example.com
 
 Managed via `pkgs.cloudflared` in `apps/dev.nix`.
 
+### Supabase CLI
+
+`supabase` is the Supabase CLI, used to manage local development stacks, run migrations, and interact with Supabase projects.
+
+```sh
+# Log in to your Supabase account
+supabase login
+
+# Start a local Supabase stack (requires Docker)
+supabase start
+
+# Link a local project to a remote one
+supabase link --project-ref <ref>
+```
+
+Managed via `pkgs.supabase-cli` in `apps/dev.nix`.
+
 ### WireGuard
 
 `wireguard-tools` provides `wg` and `wg-quick` userspace utilities. The kernel module ships with mainline Linux on Ubuntu, so no extra setup is required.

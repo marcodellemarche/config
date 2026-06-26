@@ -72,6 +72,7 @@
     pkgs.ocrmypdf
     pkgs.jira-cli-go
     pkgs.cloudflared
+    pkgs.supabase-cli
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];
