@@ -272,6 +272,20 @@ supabase link --project-ref <ref>
 
 Managed via `pkgs.supabase-cli` in `apps/dev.nix`.
 
+### Codex CLI
+
+`codex` is OpenAI's terminal coding agent, alongside `claude-code` and `gemini-cli`.
+
+```sh
+# Start an interactive session
+codex
+
+# Log in
+codex login
+```
+
+Managed via `pkgs.codex` in `apps/dev.nix`.
+
 ### WireGuard
 
 `wireguard-tools` provides `wg` and `wg-quick` userspace utilities. The kernel module ships with mainline Linux on Ubuntu, so no extra setup is required.

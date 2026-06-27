@@ -67,6 +67,7 @@
     pkgs.uv
     pkgs.claude-code
     pkgs.gemini-cli
+    pkgs.codex
     pkgs.yt-dlp
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })
     pkgs.ocrmypdf
