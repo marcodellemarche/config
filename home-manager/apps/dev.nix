@@ -74,6 +74,10 @@
     pkgs.jira-cli-go
     pkgs.cloudflared
     pkgs.supabase-cli
+    pkgs.glow
+    pkgs.dust
+    pkgs.duf
+    pkgs.tealdeer
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];

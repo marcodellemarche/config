@@ -37,6 +37,8 @@
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
+    # Atuin owns Ctrl-R for zsh history search; fzf keeps Ctrl-T/Alt-C.
+    historyWidget.zsh.command = "";
   };
 
   programs.eza = {
@@ -47,6 +49,11 @@
   };
 
   programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.atuin = {
     enable = true;
     enableZshIntegration = true;
   };
