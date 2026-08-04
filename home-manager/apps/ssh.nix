@@ -33,6 +33,7 @@
       "celeste-nuc" = { HostName = "10.35.10.51"; User = "celeste"; };
       "celeste-jetson" = { HostName = "10.35.10.43"; User = "celeste"; };
       "orbital" = { HostName = "10.35.10.109"; User = "orbital"; };
+      "bench-loop" = { HostName = "151.115.167.49"; User = "root"; };
     };
   };
 }
