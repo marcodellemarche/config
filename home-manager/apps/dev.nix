@@ -66,7 +66,7 @@
     pkgs.wireguard-tools
     pkgs.uv
     pkgs.claude-code
-    pkgs.gemini-cli
+    pkgs.antigravity-cli
     pkgs.codex
     pkgs.yt-dlp
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })

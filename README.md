@@ -274,7 +274,7 @@ Managed via `pkgs.supabase-cli` in `apps/dev.nix`.
 
 ### Codex CLI
 
-`codex` is OpenAI's terminal coding agent, alongside `claude-code` and `gemini-cli`.
+`codex` is OpenAI's terminal coding agent, alongside `claude-code` and `antigravity-cli`.
 
 ```sh
 # Start an interactive session
@@ -285,6 +285,17 @@ codex login
 ```
 
 Managed via `pkgs.codex` in `apps/dev.nix`.
+
+### Antigravity CLI
+
+Google retired Gemini CLI (June 2026) in favor of Antigravity CLI — same role (terminal coding agent, alongside `claude-code` and `codex`), new Go-based implementation. The binary is `agy`, not `antigravity` (that name is aliased to `antigravity-ide`, the separate VS Code-fork IDE — not installed here).
+
+```sh
+# Start an interactive session (prompts for Google OAuth login on first run)
+agy
+```
+
+Managed via `pkgs.antigravity-cli` in `apps/dev.nix`.
 
 ### WireGuard
 
