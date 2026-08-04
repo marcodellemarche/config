@@ -67,10 +67,10 @@
     slack = {
       name = "Slack";
       genericName = "Chat";
-      exec = "slack --no-sandbox";
+      exec = "slack --no-sandbox %U";
       terminal = false;
       categories = [ "Office" ];
-      mimeType = [ ];
+      mimeType = [ "x-scheme-handler/slack" ];
       icon = "slack";
     };
     google-chrome = {
@@ -133,6 +133,7 @@
       "x-scheme-handler/about" = "brave-browser.desktop";
       "x-scheme-handler/unknown" = "brave-browser.desktop";
       "x-scheme-handler/obsidian" = "obsidian.desktop";
+      "x-scheme-handler/slack" = "slack.desktop";
     };
   };
 
