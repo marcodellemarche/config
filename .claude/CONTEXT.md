@@ -1,7 +1,7 @@
 # Project Context
 
 > Updated by Claude at the end of every productive session.
-> Last updated: 2026-05-21
+> Last updated: 2026-07-28
 
 ---
 
@@ -9,11 +9,16 @@
 
 The configuration is healthy and applied. Removed `builtins.currentSystem` / `--impure` from `flake.nix` by introducing a `mkConfig` helper that takes `system` and `username`. Two `homeConfigurations` are defined keyed by username: `marcodellemarche` (x86_64-linux) and `ubuntu` (aarch64-linux). The `username` is passed via `extraSpecialArgs` and used in `home.nix` instead of hardcoded values.
 
+Flake inputs updated 2026-07-28 (`fenix`, `home-manager`, `nixpkgs` bumped to 2026-07-27 snapshots; `nixpkgs-go` unchanged) and applied successfully via `home-manager switch`. Note: the repo still has other unrelated uncommitted changes (small edits to `dev.nix`, `ssh.nix`, `zsh.nix`, `home.nix` from a prior session, glow/delta/dust/duf/tldr work) that were left untouched during this update — not yet committed.
+
+Atuin removed 2026-07-28: dropped `programs.atuin` from `apps/zsh.nix` and the `historyWidget.zsh.command = ""` override on `programs.fzf`, so fzf owns Ctrl-R again. Applied via `home-manager switch`; `atuin` is no longer on PATH. Leftover local data (`~/.config/atuin`, `~/.local/share/atuin`) is untouched — delete manually if not needed.
+
 ---
 
 ## Next steps (in order)
 
-No active tasks. Waiting for user direction.
+- Optional: address deprecation warning — set `home.pointerCursor.enable = true` explicitly in `home.nix` instead of relying on implicit enable from `home.pointerCursor`.
+- Review/commit the pending uncommitted changes in `dev.nix`, `ssh.nix`, `zsh.nix`, `home.nix` from the prior session (glow/delta/dust/duf/tldr work) plus the atuin removal — not yet committed.
 
 ---
 
@@ -21,6 +26,9 @@ No active tasks. Waiting for user direction.
 
 ## Recent decisions
 
+- [2026-07-28] Removed atuin — `programs.atuin` deleted from `apps/zsh.nix`, and the `programs.fzf` `historyWidget.zsh.command = ""` workaround (which existed only to let atuin own Ctrl-R) reverted so fzf's Ctrl-R history widget is active again.
+- [2026-07-28] Updated flake inputs (`nix flake update --flake ~/nix`): fenix, home-manager, nixpkgs bumped to 2026-07-27 snapshots. Applied via `home-manager switch` with no errors (only the known `home.pointerCursor` deprecation warning).
+- [2026-07-25] Updated flake inputs (`nix flake update --flake ~/nix`): fenix, home-manager, nixpkgs bumped to 2026-07-2x snapshots. Applied via `home-manager switch` with no errors.
 - [2026-05-21] Migrated Brave from nix to APT — out-of-nix intentional install. Nix-built Chromium on Ubuntu cannot initialize GLX/EGL (`glXQueryExtensionsString returned NULL`), disabling WebGL and all GPU acceleration. APT package uses system libGL and gets hardware acceleration automatically. Removed `pkgs.brave`, `brave-browser` desktop entry, and `--no-sandbox` alias from nix; `xdg.mimeApps` default still works because APT ships `brave-browser.desktop`. Documented in README under "Brave".
 - [2026-05-21] Installed `nvidia-driver-595` (proprietary) + `nvidia-prime` via APT — out-of-nix intentional install. Replaces `nouveau`. PRIME profile set to `on-demand` (Intel primary, NVIDIA wakes for GPU-intensive apps). Documented in README under "NVIDIA driver". *Note: this alone was not enough to fix WebGL in nix-built Brave — see entry above.*
 - [2026-05-20] Prepended `~/.nix-profile/bin` in `home.sessionPath` so Nix binaries (e.g. `sqlite3` 3.51.2) take precedence over duplicates shipped by Android SDK `platform-tools` (`sqlite3` 3.50.6). `pkgs.sqlite` was already installed in `apps/dev.nix`.
