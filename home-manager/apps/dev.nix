@@ -78,6 +78,11 @@
     pkgs.dust
     pkgs.duf
     pkgs.tealdeer
+    (pkgs.llm.withPlugins {
+      llm-anthropic = true;
+      llm-gemini = true;
+    })
+    pkgs.fabric-ai
   ] ++ lib.optionals pkgs.stdenv.hostPlatform.isx86_64 [
     pkgs.dbeaver-bin
   ];
