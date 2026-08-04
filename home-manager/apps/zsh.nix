@@ -19,6 +19,7 @@
       la  = "eza -la";
       lt  = "eza --tree";
       cat = "bat";
+      diff = "delta";
       xcopy = "xclip -selection clipboard";
       xpaste = "xclip -o -selection clipboard";
       daily = "~/vault/scripts/new-daily.sh";
@@ -37,8 +38,6 @@
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
-    # Atuin owns Ctrl-R for zsh history search; fzf keeps Ctrl-T/Alt-C.
-    historyWidget.zsh.command = "";
   };
 
   programs.eza = {
@@ -49,11 +48,6 @@
   };
 
   programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  programs.atuin = {
     enable = true;
     enableZshIntegration = true;
   };
