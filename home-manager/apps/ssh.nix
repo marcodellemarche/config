@@ -25,10 +25,10 @@
       "pacco-6" = { HostName = "18.193.84.10"; User = "ubuntu"; };
       "pacco-7" = { HostName = "3.127.108.204"; User = "ubuntu"; };
       "pacco-8" = { HostName = "54.93.105.225"; User = "ubuntu"; };
-      "pacco-9" = { HostName = "51.15.59.68"; User = "root"; };
-      "pacco-10" = { HostName = "51.158.190.168"; User = "root"; };
-      "pacco-11" = { HostName = "51.15.101.220"; User = "root"; };
-      "pacco-12" = { HostName = "51.158.166.151"; User = "root"; };
+      "offcacher-1" = { HostName = "51.15.59.68"; User = "root"; };
+      "offcacher-2" = { HostName = "51.158.190.168"; User = "root"; };
+      "offcacher-3" = { HostName = "51.15.101.220"; User = "root"; };
+      "offcacher-4" = { HostName = "51.158.166.151"; User = "root"; };
       "celeste-test" = { HostName = "10.158.142.1"; User = "celeste"; };
       "celeste-nuc" = { HostName = "10.35.10.51"; User = "celeste"; };
       "celeste-jetson" = { HostName = "10.35.10.43"; User = "celeste"; };
