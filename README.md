@@ -297,6 +297,95 @@ agy
 
 Managed via `pkgs.antigravity-cli` in `apps/dev.nix`.
 
+### Pi coding agent
+
+`pi` ([pi.dev](https://pi.dev/)) is a minimal terminal coding agent, alongside `claude-code`, `codex` and `agy`. Unlike the others it is provider-agnostic by design: any OpenAI-, Anthropic- or Google-compatible endpoint can be added as a custom provider.
+
+```sh
+# Start an interactive session in the current directory
+pi
+
+# One-shot, non-interactive
+pi -p "spiega questo repo"
+
+# Pick / save a model:  /model  (or Ctrl+L) inside the TUI, Ctrl+S to save as default
+# Log in to a subscription provider (Claude Pro/Max, ChatGPT, Copilot):  /login
+```
+
+Config lives in `~/.pi/agent/` (`auth.json`, `models.json`, `settings.json`, `AGENTS.md`, sessions). It also reads the project's `AGENTS.md` / `CLAUDE.md`.
+
+**Custom LLM providers** go in `~/.pi/agent/models.json`, reloaded every time `/model` is opened (no restart). Structure: `providers` → free-form name → `baseUrl` + `api` (`openai-completions` / `openai-responses` / `anthropic-messages` / `google-generative-ai`) + `apiKey` + `models[]`. Only `models[].id` is mandatory; `name`, `reasoning`, `input`, `contextWindow`, `maxTokens`, `cost`, `samplingParams` are optional. `apiKey` accepts `"$VAR"` (env var), `"!cmd"` (stdout of a shell command) or a literal string. A model stays hidden in `/model` until it has credentials — from `apiKey`, from `/login`, or from `--api-key`.
+
+Cubbit's **Mimir** (the same gateway `opencode` uses in `~/cubbit/opencode.jsonc` — Bifrost in front of vLLM) exposes two models. Capabilities below were probed directly against `https://mimir.cubbit.dev/v1`, not assumed:
+
+| | `vllm/mimir` | `cubbit/mimir-small` |
+|---|---|---|
+| base model (self-reported) | GLM (Z.ai) | Qwen (Alibaba) |
+| server `max_model_len` (= `max_total_tokens`) | **1 048 576** | **262 144** |
+| context set in the opencode config | 360 448 | 120 832 |
+| images | **yes** | **yes** |
+| tool calling | yes (`finish_reason: tool_calls`) | yes |
+| structured output (`json_schema`) | yes | yes |
+| reasoning | always on, returned in `reasoning` + `reasoning_details` | always on, cannot be turned off |
+| `reasoning_effort` values | any string accepted (unvalidated) | strict: `low`, `medium`, `xhigh` (default) — `high` and `max` return HTTP 400 |
+| `chat_template_kwargs.thinking.type: "disabled"` | shortens reasoning, does not remove it | no measurable effect |
+| `developer` role | accepted | accepted |
+
+Two things the opencode config does not tell you and that matter here: **`vllm/mimir` accepts images too** (opencode only declares `attachment` on `mimir-small`), and **`mimir-small` rejects `reasoning_effort: high`/`max`** — which is exactly what pi would send for its `high`/`max` thinking levels, so those need remapping.
+
+Resulting `~/.pi/agent/models.json`:
+
+```json
+{
+  "providers": {
+    "cubbit": {
+      "baseUrl": "https://mimir.cubbit.dev/v1",
+      "api": "openai-completions",
+      "apiKey": "!cat /home/marcodellemarche/cubbit/mimir-key",
+      "headers": { "x-bf-passthrough-extra-params": "true" },
+      "compat": { "supportsDeveloperRole": false },
+      "models": [
+        {
+          "id": "vllm/mimir", "name": "Mimir", "reasoning": true,
+          "input": ["text", "image"], "contextWindow": 1048576, "maxTokens": 32768,
+          "thinkingLevelMap": { "xhigh": "xhigh", "max": "max" },
+          "samplingParams": {
+            "chat_template_kwargs": { "thinking": { "type": "enabled" } }
+          }
+        },
+        {
+          "id": "cubbit/mimir-small", "name": "Mimir Small", "reasoning": true,
+          "input": ["text", "image"], "contextWindow": 262144, "maxTokens": 32768,
+          "thinkingLevelMap": {
+            "minimal": "low", "low": "low", "medium": "medium",
+            "high": "xhigh", "xhigh": "xhigh", "max": null
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+Notes on the mapping:
+
+- **`apiKey`** — pi has no `{file:...}` like opencode, but `"!cmd"` runs a shell command and uses its stdout, so the key is read at runtime from `~/cubbit/mimir-key` (gitignored in the cubbit repo) and never stored in this repo. `models.json` itself is `chmod 600` and lives outside nix — home-manager does not manage it.
+- **`thinkingLevelMap`** — tristate: omitted level → provider default (and `xhigh`/`max` are unavailable unless mapped explicitly), a string → that exact value is sent, `null` → the level is hidden/clamped. It is what keeps pi's `--thinking high` from producing a 400 on `mimir-small`.
+- **`samplingParams`** — pi's passthrough for arbitrary extra request params; it carries `chat_template_kwargs`, paired with the `x-bf-passthrough-extra-params` header the gateway requires.
+- **`supportsDeveloperRole: false`** — kept only to mirror what opencode's `@ai-sdk/openai-compatible` does (system prompt as a `system` message). Both models were verified to accept the `developer` role as well, so this flag can be dropped if you ever want to.
+- **`contextWindow`** — set to the server's real `max_model_len` (1M and 256K), not to the more conservative 360 448 / 120 832 the opencode config uses. Note that vLLM's limit is `max_total_tokens`, i.e. **input + output**: the effective input budget is the number above minus `maxTokens`. Going over returns a plain HTTP 400 from vLLM naming the exact limit, so an overshoot fails loudly rather than silently truncating.
+
+```sh
+pi --list-models                                     # both models, thinking=yes, images=yes
+pi --model cubbit/vllm/mimir                         # GLM, thinking, images
+pi --model cubbit/cubbit/mimir-small --thinking low  # Qwen, smaller and faster
+pi --model cubbit/vllm/mimir @screenshot.png "cosa non va in questa UI?"
+```
+
+Inside the TUI: `/model` (or Ctrl+L) to switch, Ctrl+S on the highlighted model to save it as the startup default.
+
+Managed via `pkgs.pi-coding-agent` in `apps/dev.nix` (binary is `pi`).
+
 ### WireGuard
 
 `wireguard-tools` provides `wg` and `wg-quick` userspace utilities. The kernel module ships with mainline Linux on Ubuntu, so no extra setup is required.
@@ -374,6 +463,19 @@ prime-select query                  # on-demand: Intel primary, NVIDIA on-demand
 ```
 
 `nvidia-prime` is pulled in automatically and sets the on-demand PRIME profile, which is the right choice on hybrid Intel + NVIDIA laptops: Intel drives the desktop, NVIDIA wakes up only for GPU-intensive apps. Browsers detect the NVIDIA GPU and enable hardware-accelerated WebGL. Updates ride along with `apt upgrade`.
+
+### OpenHuman
+
+OpenHuman is **not** managed by nix. It's a Tauri desktop app (Rust core + Node/pnpm frontend) with no upstream `flake.nix`/`default.nix` — packaging it from source would mean vendoring both a Cargo build and a pnpm/Tauri build (webkit2gtk, etc.), which is disproportionate for this app. Installed from the official `.deb` release:
+
+```sh
+curl -sL https://api.github.com/repos/tinyhumansai/OpenHuman/releases/latest \
+  | grep browser_download_url | grep amd64.deb
+# download the URL above, then:
+sudo apt-get install -y --no-install-recommends ./OpenHuman_*_amd64.deb
+```
+
+The binary is `/usr/bin/OpenHuman`, with a desktop entry at `/usr/share/applications/OpenHuman.desktop`. Installed as apt package `open-human` (pulls in `libxdo3`). Updates: re-download the latest `.deb` and re-run the install command (no APT repo, so it does not ride along with `apt upgrade`).
 
 ---
 

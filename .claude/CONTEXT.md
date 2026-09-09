@@ -1,7 +1,7 @@
 # Project Context
 
 > Updated by Claude at the end of every productive session.
-> Last updated: 2026-07-28
+> Last updated: 2026-09-09
 
 ---
 
@@ -26,6 +26,8 @@ Atuin removed 2026-07-28: dropped `programs.atuin` from `apps/zsh.nix` and the `
 
 ## Recent decisions
 
+- [2026-09-09] Installed `pkgs.pi-coding-agent` (binary `pi`, v0.84.2 on the current lock) in `apps/dev.nix` — provider-agnostic terminal coding agent, fourth alongside `claude-code`, `codex`, `agy`. Configured Cubbit's Mimir as a custom provider in `~/.pi/agent/models.json` (outside nix, `chmod 600`), mirroring `~/cubbit/opencode.jsonc`: `https://mimir.cubbit.dev/v1`, `openai-completions`, key read at runtime via `!cat ~/cubbit/mimir-key`, header `x-bf-passthrough-extra-params`, `compat.supportsDeveloperRole=false`, thinking passed through `samplingParams.chat_template_kwargs` plus per-model `thinkingLevelMap`. Capabilities probed directly against the gateway rather than copied blindly from opencode, which surfaced two divergences: `vllm/mimir` (GLM, server `max_model_len` 1048576) **does** accept images, and `cubbit/mimir-small` (Qwen, 262144) validates `reasoning_effort` strictly against `low`/`medium`/`xhigh` — `high` and `max` return HTTP 400, so a `thinkingLevelMap` remaps pi's levels onto them. Both models do tool calling, json_schema structured output and always-on reasoning; `thinking.type=disabled` does not actually disable it. `contextWindow` set to the server ceilings (1048576 / 262144) rather than opencode's conservative 360448 / 120832; note vLLM's limit is `max_total_tokens`, so input budget = ceiling minus `maxTokens`. All thinking levels and image input verified end-to-end through `pi`. Documented in README under "Pi coding agent".
+- [2026-08-26] Installed OpenHuman (Tauri desktop app, tinyhumansai/OpenHuman) out-of-nix via official `.deb` release — no upstream flake/default.nix, and packaging a Rust+Node/pnpm Tauri app from source would be disproportionate. Downloaded `OpenHuman_0.63.12_amd64.deb` from the GitHub releases page and installed with `apt-get install`. Binary at `/usr/bin/OpenHuman`, apt package `open-human` (pulls `libxdo3`). No APT repo, so updates require manually re-downloading the latest `.deb`. Documented in README under "Out-of-nix" apps, new "OpenHuman" section after NVIDIA driver.
 - [2026-07-28] Removed atuin — `programs.atuin` deleted from `apps/zsh.nix`, and the `programs.fzf` `historyWidget.zsh.command = ""` workaround (which existed only to let atuin own Ctrl-R) reverted so fzf's Ctrl-R history widget is active again.
 - [2026-07-28] Updated flake inputs (`nix flake update --flake ~/nix`): fenix, home-manager, nixpkgs bumped to 2026-07-27 snapshots. Applied via `home-manager switch` with no errors (only the known `home.pointerCursor` deprecation warning).
 - [2026-07-25] Updated flake inputs (`nix flake update --flake ~/nix`): fenix, home-manager, nixpkgs bumped to 2026-07-2x snapshots. Applied via `home-manager switch` with no errors.

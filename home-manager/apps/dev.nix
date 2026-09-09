@@ -68,6 +68,7 @@
     pkgs.claude-code
     pkgs.antigravity-cli
     pkgs.codex
+    pkgs.pi-coding-agent
     pkgs.yt-dlp
     (pkgs.tesseract.override { enableLanguages = [ "eng" "ita" "por" ]; })
     pkgs.ocrmypdf
