@@ -14,6 +14,9 @@
       code     = "code --no-sandbox";
       obsidian = "obsidian --no-sandbox";
       chrome   = "google-chrome-stable --no-sandbox";
+      # OpenDesign CLI (out-of-nix, source in ~/open-design): bare `od` starts
+      # the daemon + web UI; everything else is the upstream CLI (config, export, lint, ...)
+      od = "nix run nixpkgs#nodejs_24 -- ~/open-design/apps/daemon/bin/od.mjs";
       ls  = "eza";
       ll  = "eza -l";
       la  = "eza -la";

@@ -386,6 +386,125 @@ Inside the TUI: `/model` (or Ctrl+L) to switch, Ctrl+S on the highlighted model 
 
 Managed via `pkgs.pi-coding-agent` in `apps/dev.nix` (binary is `pi`).
 
+### OpenDesign
+
+OpenDesign ([open-design.ai](https://open-design.ai/), [nexu-io/open-design](https://github.com/nexu-io/open-design)) is a local-first design layer that drives an existing coding-agent CLI: you pick a design system and a template, it composes the prompt and streams the agent's file writes into a live preview. It ships 152 design systems as `DESIGN.md` packages.
+
+It is **not** managed by nix and **not** in nixpkgs. There is no prebuilt Linux desktop artifact either (upstream issue #4368), so on Ubuntu it runs from source at `~/open-design`:
+
+```sh
+git clone https://github.com/nexu-io/open-design.git ~/open-design
+nix shell nixpkgs#nodejs_24 nixpkgs#pnpm_10 --command bash -c 'cd ~/open-design && pnpm install'
+```
+
+Node `~24` and pnpm `>=10.33.2 <11` are required — both come from the ephemeral `nix shell` above, so nothing is added to the profile. `corepack enable` from the upstream instructions is **not** usable here: it writes shims into the Node prefix, which is a read-only nix store path. `pnpm_10` from nixpkgs (10.34.5) satisfies the engine range, and pnpm then self-manages down to the pinned 10.33.2.
+
+Build the web bundle once (`next build` → static export in `apps/web/out`, ~118 MB), so the daemon can serve the UI itself on a single fixed port:
+
+```sh
+nix shell nixpkgs#nodejs_24 nixpkgs#pnpm_10 --command bash -c 'cd ~/open-design && pnpm --filter @open-design/web build'
+```
+
+After that, **`od` is the command to use** — see below. The underlying dev-mode alternative, useful when hacking on OpenDesign itself, is `pnpm tools-dev run web` (Vite/Next dev server, dynamic ports unless `--daemon-port` / `--web-port` are passed); `pnpm tools-dev` also takes `start` / `stop` / `restart` / `status` / `logs` / `check`.
+
+**Why from source and not Docker:** the daemon spawns the agent CLI it finds on `PATH`. In a container it cannot see the host's `pi`, so the Docker path only works with a BYOK runtime — not with the local pi + Mimir setup.
+
+The daemon scans `PATH` and auto-detects the installed agents; on this machine it finds `claude`, `codex`, `opencode`, `pi` and `agy`. The pi adapter (`docs/agent-adapters.md` §5.10) drives `pi --mode rpc` over JSON-RPC and builds its model picker by parsing `pi --list-models`, so **the Cubbit Mimir provider configured for pi shows up in OpenDesign automatically** as `cubbit/vllm/mimir` and `cubbit/cubbit/mimir-small`. Thinking levels (`off` … `xhigh`) and image input are wired through too.
+
+Known rough edges on this setup:
+
+- pi logs `EISDIR` warnings for `--append-system-prompt <dir>` on the `skills/` and `design-systems/` directories. Those are path *hints* — the actual skill and design-system content travels in the composed prompt — so the run is unaffected.
+- A bare `POST /api/chat` with no project ends with `artifactCount: 0` and the agent writes into the repo's cwd. Drive it from the web UI (which creates a project workspace) rather than by hand.
+- `pnpm install` leaves four build scripts unapproved: `node-pty` (terminal shell), `@ffmpeg-installer/linux-x64` and `@ffprobe-installer/linux-x64` (video artifacts), `@google/genai`. Run `pnpm approve-builds` if those features are needed.
+- The checkout plus `node_modules` is ~3.2 GB.
+
+#### `od` — the command to use
+
+`od` is a zsh alias in `apps/zsh.nix` pointing at the checkout's CLI entrypoint:
+
+```nix
+od = "nix run nixpkgs#nodejs_24 -- ~/open-design/apps/daemon/bin/od.mjs";
+```
+
+`nix run` with a warm store adds ~80 ms, so nothing is installed into the profile and no `nix shell` is needed at call time. Bare `od` starts the daemon on port 7456 and opens the web UI; the rest is the upstream CLI:
+
+```sh
+od                      # start daemon + web UI on http://127.0.0.1:7456
+od config list          # read the app config
+od config set <k> <v>   # write it (use --value-json for structured values)
+od export / lint / mcp / plugin / automation / memory / research …
+```
+
+**The agent and model are pinned in the app config**, not in this repo — `~/open-design/.od/app-config.json` is runtime state outside nix:
+
+```sh
+od config set agentId pi
+od config set agentModels --value-json '{"pi":{"model":"cubbit/vllm/mimir","reasoning":"medium"}}'
+```
+
+Careful with `config set`: a positional value is treated as a string, so a structured value is **silently dropped** — it prints `[config] set agentModels` and writes nothing. `--value-json` is required for anything that is not a scalar.
+
+`od config set designSystemId <id>` exists too but does less than it looks: the app-level default is gated on `allowAppDefault: project === null`, so it only applies to runs with no project. For folder projects the project's own `designSystemId` is what counts.
+
+#### Starting a project on an existing folder
+
+
+Two independent pieces: *which folder the agent writes into*, and *which design system it follows*.
+
+**1. Point a project at an existing folder.** OpenDesign projects normally live under the daemon data dir; a project can be bound to an external folder instead — the "imported folder" case, which stores the path as `metadata.baseDir`. `POST /api/import/folder` does the whole thing in one call, project creation plus design system:
+
+```sh
+D=http://127.0.0.1:7456
+
+curl -s -X POST $D/api/import/folder -H 'content-type: application/json' \
+  -d '{"baseDir":"'"$HOME"'/cubbit","name":"cubbit","designSystemId":"user:cubbit"}'
+```
+
+The project id is generated, so calling it twice on the same folder creates a duplicate; check `GET /api/projects` for an existing `metadata.baseDir` match first. In the UI this is the import-folder flow, and the design system is then picked in the composer. Guardrails: `$HOME` itself, system directories, and `~/.ssh` / `~/.aws` / `~/.gnupg` / `~/.kube` / `~/.docker` are refused as project roots.
+
+The older two-step form (`POST /api/projects` with an explicit `id`, then `POST /api/projects/:id/working-dir` with `baseDir`) also works; `POST /api/projects` rejects a `name`-only body with `invalid project id`.
+
+**2. Install a design system.** The daemon data dir is `~/open-design/.od/` (`<projectRoot>/.od`, overridable with `OD_DATA_DIR`); user-installed design systems live in `~/open-design/.od/design-systems/<slug>/`:
+
+```text
+~/open-design/.od/design-systems/cubbit/
+├── DESIGN.md       # canonical design prose, with the frontmatter block
+├── tokens.css      # compiled CSS custom properties
+├── manifest.json   # schemaVersion od-design-system-project/v1, id, name, category, source, files
+└── metadata.json   # title, category, surface, status, timestamps
+```
+
+**The `metadata.json` `status` field is the trap.** A user design system defaults to `status: "draft"`, and the run-time gate is literally `summary?.status !== 'draft'` — a draft is skipped **silently** and the run falls back to the app default design system. There is no error, no warning in the stream: the artifact simply comes out in the wrong brand. Set `"status": "published"`.
+
+The Cubbit brand kit in `~/Downloads/Cubbit/` was already in OpenDesign's format (a `DESIGN.md` with the `name`/`category`/`surface`/`colors` frontmatter, plus a full token set), so it installs as-is. What maps to what:
+
+| installed file | source | read by |
+|---|---|---|
+| `DESIGN.md` | `DESIGN.md` | prompt (canonical prose) |
+| `tokens.css` | `system/variables.css` | prompt (token block) |
+| `USAGE.md` | `SKILLS.md` | prompt |
+| `components.html` | `system/kit.html` | prompt (component fixture, 77 KB) |
+| `design-tokens.json` | `system/tokens.default.json` | tooling |
+
+`system/variables.css` already carries both the `:root` light block and a `.dark` block — `system/variables.dark.css` is a separate dark-first variant and must **not** be concatenated onto it, since both declare `:root`.
+
+On first listing the daemon fleshes out the package on its own (`preview/` review cards, `colors_and_type.css`, a generated `SKILL.md`, a placeholder `assets/logo.svg`, `context/provenance.*`), tracked in `.od-generated.json`. Those are generated from the DESIGN.md frontmatter; the real tokens still come from `tokens.css`.
+
+Left undeclared on purpose: `componentsManifest` (a derived cache regenerated from `components.html` + `tokens.css` by upstream tooling) and `importMode` (`hybrid`/`verbatim` carry source-evidence requirements this package does not satisfy).
+
+It registers as **`user:cubbit`** and shows up in `/api/design-systems` alongside the 152 bundled ones. Selecting it per run:
+
+```sh
+curl -sN -X POST $D/api/chat -H 'content-type: application/json' \
+  -d '{"agentId":"pi","model":"cubbit/vllm/mimir","reasoning":"low",
+       "projectId":"cubbit","designSystemId":"user:cubbit",
+       "message":"Crea index.html: landing minimale con un bottone primario."}'
+```
+
+Verified: with `status: draft` the output came back in the bundled "Neutral Modern" palette (`--accent: #2f6feb`, Inter); with `status: published` the same prompt produced `#1677ff`, `--brand-color-primary`, Titillium Web and Source Sans 3 — the actual Cubbit tokens.
+
+The daemon also auto-creates a backing project named `ds-cubbit` (`importedFrom: design-system`) so the system can be edited from the UI. That is expected; leave it alone.
+
 ### WireGuard
 
 `wireguard-tools` provides `wg` and `wg-quick` userspace utilities. The kernel module ships with mainline Linux on Ubuntu, so no extra setup is required.
