@@ -29,6 +29,8 @@
       "offcacher-2" = { HostName = "51.158.190.168"; User = "root"; };
       "offcacher-3" = { HostName = "51.15.101.220"; User = "root"; };
       "offcacher-4" = { HostName = "51.158.166.151"; User = "root"; };
+      "offcacher-5" = { HostName = "151.115.165.189"; User = "root"; };
+      "offcacher-6" = { HostName = "51.159.98.19"; User = "ubuntu"; };
       "celeste-test" = { HostName = "10.158.142.1"; User = "celeste"; };
       "celeste-nuc" = { HostName = "10.35.10.51"; User = "celeste"; };
       "celeste-jetson" = { HostName = "10.35.10.43"; User = "celeste"; };
